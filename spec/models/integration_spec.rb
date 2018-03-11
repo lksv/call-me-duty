@@ -18,7 +18,7 @@ RSpec.describe Integration, type: :model do
 
   describe 'FactoryBot.create(:integration)' do
     subject { create(:integration) }
-    it 'creates service' do
+    it 'creates integration' do
       subject
       expect(subject.service).to_not be nil
     end
