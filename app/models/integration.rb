@@ -21,6 +21,7 @@ class Integration < ApplicationRecord
   enum type: [:prometheus]
 
   belongs_to :service
+  has_many   :incidents
 
   has_secure_token :key
 

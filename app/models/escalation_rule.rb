@@ -33,8 +33,11 @@ class EscalationRule < ApplicationRecord
 
   validates :delay, presence: true
 
-
   delegate :incident, to: :escalation_policy
+
+  def readonly?
+    !new_record? && escalation_policy.readonly?
+  end
 
   def condition
     "EscalationRule::#{condition_type.camelize}Condition"

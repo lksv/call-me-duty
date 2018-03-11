@@ -1,4 +1,12 @@
 FactoryBot.define do
+  factory :incident do
+    team
+    status          'created'
+    priority        'critical'
+    title           "My Incident"
+    alert_trigged_count 1
+  end
+
   factory :webhook do
     sequence(:name)     { |n| "Webhook name no. #{n}" }
     team

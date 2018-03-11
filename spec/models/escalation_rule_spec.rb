@@ -28,6 +28,22 @@ RSpec.describe EscalationRule, type: :model do
   end
 
 
+  describe 'readonly' do
+    let(:escalation_rule) { create(:escalation_rule) }
+    let(:prime) { create(:escalation_policy, escalation_rules: [escalation_rule]) }
+    let(:clone) { c = prime.find_or_build_clone; c.new_record? && c.save!; c }
+
+    it 'cannot change any escalation_rule of clone' do
+      clone_escalation_rule = clone.escalation_rules.first
+      clone_escalation_rule.delay = 1000
+      expect {
+        clone_escalation_rule.save!
+      }.to raise_error(ActiveRecord::ReadOnlyRecord)
+    end
+
+  end
+
+
   let(:incident) { double('incident instance') }
 
   describe '#condition' do

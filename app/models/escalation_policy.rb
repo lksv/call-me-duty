@@ -23,6 +23,7 @@ class EscalationPolicy < ApplicationRecord
            -> { order(delay: :asc) },
            dependent: :destroy,
            inverse_of: :escalation_policy
+  has_many :incidents
 
 
 
@@ -43,7 +44,7 @@ class EscalationPolicy < ApplicationRecord
            inverse_of: :clonned_from
 
 
-  validates :name, presence: true, uniqueness: true
+  validate :name_uniqueness_for_not_cloned
 
   strip_attributes only: :name, collapse_spaces: true, replace_newlines: true
 
@@ -54,7 +55,11 @@ class EscalationPolicy < ApplicationRecord
   end
 
   def find_or_build_clone
-    clones.reoder(created_at: :asc).limit(1).first || build_clone
+    last_clone = clones.reorder(created_at: :asc).limit(1).first
+    return build_clone unless last_clone
+
+    # if there was a changes after created of last_clone then build a new one
+    (last_clone.created_at > self.updated_at) ? last_clone : build_clone
   end
 
   private
@@ -62,17 +67,25 @@ class EscalationPolicy < ApplicationRecord
   # create a deep copy, e.g. copy all escalation_rules
   #
   def build_clone
-    eper = self.attributes
-    eper.delete :id, :type
-    new_clone = EscalationPolicyExecutionRecord.new(eper)
+    new_clone = self.dup
     new_clone.clonned_from = self
+    new_clone.id = nil
 
     escalation_rules.each do |escalation_rule|
-      er_attrs = escalation_rules.attributes
-      er_attrs.delete :id
-      er = new_clone.escalation_rules.build er_attrs
-      er.state = :created
+      er_attrs = escalation_rule.attributes
+      er_attrs.delete 'id'
+      new_clone.escalation_rules.build er_attrs
     end
     new_clone
+  end
+
+  private
+
+  def name_uniqueness_for_not_cloned
+    return if clonned_from
+
+    uniq_condition = EscalationPolicy.where(name: name)
+    uniq_condition = uniq_condition.where.not(id: id) if id
+    errors.add(:name, 'has already been taken') unless uniq_condition.size == 0
   end
 end

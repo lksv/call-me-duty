@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180310232924) do
+ActiveRecord::Schema.define(version: 20180311075636) do
 
   create_table "calendar_events", force: :cascade do |t|
     t.integer "calendar_id"
@@ -54,6 +54,26 @@ ActiveRecord::Schema.define(version: 20180310232924) do
     t.datetime "updated_at", null: false
     t.index ["escalation_policy_id"], name: "index_escalation_rules_on_escalation_policy_id"
     t.index ["target_type", "target_id"], name: "index_escalation_rules_on_target_type_and_target_id"
+  end
+
+  create_table "incidents", force: :cascade do |t|
+    t.integer "status"
+    t.string "title", limit: 127
+    t.text "description"
+    t.text "data"
+    t.integer "team_id"
+    t.integer "integration_id"
+    t.integer "service_id"
+    t.integer "escalation_policy_id"
+    t.integer "priority"
+    t.integer "alert_trigged_count"
+    t.datetime "snoozed_until"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["escalation_policy_id"], name: "index_incidents_on_escalation_policy_id"
+    t.index ["integration_id"], name: "index_incidents_on_integration_id"
+    t.index ["service_id"], name: "index_incidents_on_service_id"
+    t.index ["team_id"], name: "index_incidents_on_team_id"
   end
 
   create_table "integrations", force: :cascade do |t|

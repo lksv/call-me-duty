@@ -20,8 +20,9 @@
 # * cancel_acknowledgement_after:Integer
 
 class Service < ApplicationRecord
-  belongs_to :team
-  has_many :integrations,    dependent: :destroy
+  belongs_to  :team
+  has_many    :integrations,    dependent: :destroy
+  has_many    :incidents
 
   validates :name, presence: true, uniqueness: { scope: :team }
 
