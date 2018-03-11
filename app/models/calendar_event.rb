@@ -23,6 +23,8 @@ class CalendarEvent < ApplicationRecord
   validates :start_at, :end_at, presence: true
   validate :user_in_in_calendar_team
 
+  delegate :team, to: :calendar
+
 
   # returs previews calendar_event (even if there is a gap in schedule)
   def previews

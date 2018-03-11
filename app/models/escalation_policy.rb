@@ -51,7 +51,7 @@ class EscalationPolicy < ApplicationRecord
   scope :prime, -> { where(clonned_from: nil) }
 
   def readonly?
-    !new_record? && clonned_from_id
+    !new_record? && clonned_from_id && !team.marked_for_destruction
   end
 
   def find_or_build_clone

@@ -18,6 +18,8 @@
 #
 
 class Integration < ApplicationRecord
+  Integration.inheritance_column = nil
+
   enum type: [:prometheus]
 
   belongs_to :service
@@ -27,6 +29,8 @@ class Integration < ApplicationRecord
 
   validates :key, uniqueness: true
   validates :type, presence: true
+
+  delegate :team, to: :service
 
   strip_attributes only: :name, collapse_spaces: true, replace_newlines: true
 end

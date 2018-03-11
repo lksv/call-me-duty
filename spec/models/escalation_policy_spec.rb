@@ -27,6 +27,30 @@ RSpec.describe EscalationPolicy, type: :model do
     end
   end
 
+  describe '#readonly?' do
+    let(:escalation_policy) { create(:escalation_policy) }
+    let(:clonned_escalation_policy)  { t = escalation_policy.find_or_build_clone; t.save!; t }
+    let(:unpersisted_escalation_policy)  { build(:escalation_policy) }
+
+    it 'return true when escalation_policy is clonned' do
+      expect(clonned_escalation_policy.readonly?).to be true
+    end
+
+    it 'return false for clonned escalation_policy when team is marked for destruction' do
+      clonned_escalation_policy.team.marked_for_destruction = true
+      expect(clonned_escalation_policy.readonly?).to be false
+    end
+
+
+    it 'return false when escalation_policy not clonned' do
+      expect(escalation_policy.readonly?).to be_falsey
+    end
+
+    it 'return false when escalation_policy is not persisted' do
+      expect(unpersisted_escalation_policy.readonly?).to be_falsey
+    end
+  end
+
   describe 'destroy of clone is prohibited' do
     it 'do not destroy item clonned item' do
       prime = create(:escalation_policy)

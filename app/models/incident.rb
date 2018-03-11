@@ -41,6 +41,11 @@ class Incident < ApplicationRecord
   validate :integration_belongs_to_service
 
 
+  def readonly?
+    !new_record? && resolved? && !team.marked_for_destruction
+  end
+
+
   private
 
   def set_service_when_integration

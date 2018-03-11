@@ -14,6 +14,8 @@
 #
 
 class Team < ApplicationRecord
+  before_destroy { |record| record.marked_for_destruction = true }
+
   has_and_belongs_to_many :users
   has_many :services,             dependent: :destroy
   has_many :escalation_policies,  dependent: :destroy
@@ -23,7 +25,11 @@ class Team < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
 
+
   strip_attributes only: :name, collapse_spaces: true, replace_newlines: true
+
+  # it must be set, before team.destroy
+  attr_accessor :marked_for_destruction
 
   def on_call
     # TODO

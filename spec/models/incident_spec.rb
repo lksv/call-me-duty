@@ -26,6 +26,31 @@ RSpec.describe Incident, type: :model do
     end
   end
 
+  describe '#readonly?' do
+    let(:resolved_incident) { create(:incident, status: 'resolved') }
+    let(:created_incident)  { create(:incident, status: 'created') }
+    let(:unpersisted_incident)  { build(:incident) }
+
+    it 'return true when incident is resolved' do
+      expect(resolved_incident.readonly?).to be true
+    end
+
+    it 'return false for resolved incident when team is marked for destruction' do
+      resolved_incident.team.marked_for_destruction = true
+      expect(resolved_incident.readonly?).to be false
+    end
+
+
+    it 'return false when incident not resolved' do
+      expect(created_incident.readonly?).to be false
+    end
+
+    it 'return false when incident is not persisted' do
+      expect(unpersisted_incident.readonly?).to be false
+    end
+  end
+
+
   describe 'associations' do
     it 'it sets an team association' do
       subject = create(:incident)
