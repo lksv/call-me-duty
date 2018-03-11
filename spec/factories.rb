@@ -1,4 +1,12 @@
 FactoryBot.define do
+  factory :webhook do
+    sequence(:name)     { |n| "Webhook name no. #{n}" }
+    team
+    token               { SecureRandom.hex(3) }
+    uri                 "http://example.com/"
+    template            "basic template {{title}}\nDescription: {{description}}"
+  end
+
   factory :escalation_rule do
     escalation_policy
     condition_type    'not_acked'

@@ -22,4 +22,9 @@ class Team < ApplicationRecord
   validates :name, presence: true, uniqueness: true
 
   strip_attributes only: :name, collapse_spaces: true, replace_newlines: true
+
+  def on_call
+    # TODO
+    escalation_policies&.first&.on_call
+  end
 end

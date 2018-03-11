@@ -23,7 +23,7 @@ class Service < ApplicationRecord
   belongs_to :team
   has_many :integrations,    dependent: :destroy
 
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: { scope: :team }
 
   strip_attributes only: :name, collapse_spaces: true, replace_newlines: true
 end

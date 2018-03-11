@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180310212540) do
+ActiveRecord::Schema.define(version: 20180310232924) do
 
   create_table "calendar_events", force: :cascade do |t|
     t.integer "calendar_id"
@@ -109,6 +109,17 @@ ActiveRecord::Schema.define(version: 20180310212540) do
     t.string "phone"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "webhooks", force: :cascade do |t|
+    t.integer "team_id"
+    t.string "name"
+    t.string "token"
+    t.string "uri", limit: 2000
+    t.string "template"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["team_id"], name: "index_webhooks_on_team_id"
   end
 
 end

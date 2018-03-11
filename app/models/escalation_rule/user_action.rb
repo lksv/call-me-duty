@@ -1,5 +1,14 @@
 class EscalationRule::UserAction < EscalationRule::BaseAction
+  def user
+    raise(
+      ::EscalationRule::InvalidTargetError,
+      "Expecting User got #{target.class}"
+    ) unless User === target
+
+    target
+  end
+
   def execute
-    UserNotification.new(target).execute
+    UserNotificationService.new(user).execute
   end
 end
