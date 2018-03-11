@@ -17,6 +17,7 @@ class Team < ApplicationRecord
   has_and_belongs_to_many :users
   has_many :services,             dependent: :destroy, inverse_of: :team
   has_many :escalation_policies,  dependent: :destroy, inverse_of: :team
+  has_many :webhooks,             dependent: :destroy, inverse_of: :team
   has_one :calendar,              dependent: :destroy, inverse_of: :team
 
   validates :name, presence: true, uniqueness: true

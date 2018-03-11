@@ -1,3 +1,21 @@
+# == Schema Information
+#
+# Table name: webhooks
+#
+#  id         :integer          not null, primary key
+#  team_id    :integer
+#  name       :string
+#  token      :string
+#  uri        :string(2000)
+#  template   :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+# Indexes
+#
+#  index_webhooks_on_team_id  (team_id)
+#
+
 class Webhook < ApplicationRecord
   belongs_to :team
 
@@ -10,9 +28,12 @@ class Webhook < ApplicationRecord
 
   strip_attributes only: :name, collapse_spaces: true, replace_newlines: true
 
-  def render(vars)
-    template.gsub(/{{\s*([a-zA-Z_][a-zA-Z0-9_]*)\s}}/) do
-      vars[$1].to_s
+  def render(vars = {})
+    template.gsub(/{{\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*}}/) do
+      variable = $1
+      escaped = variable.sub!(/_escaped\z/, '')
+      value = vars[variable.intern].to_s
+      escaped ?  value.inspect : value
     end
   end
 end
