@@ -1,6 +1,6 @@
 class EscalationRuleWorker
   include Sidekiq::Worker
-  sidekiq_options :queue => :escalation_rule, :retry => 2, :backtrace => true
+  sidekiq_options :queue => :escalation_rule, :retry => 3, :backtrace => true
 
   attr_reader :escalation_rule
 
@@ -24,16 +24,10 @@ class EscalationRuleWorker
   end
 
   def process_action
-    result = IncidentAuditService.log_event(
-      event: event,
+    IncidentAuditService.log_event(
+      event: :escalation_rule_action,
       incident: escalation_rule.incident,
       escalation_rule: escalation_rule
-    ) do
-      escalation_rule.action.eval
-    end
-    event = result ? \
-      :escalation_rule_action_finished : :escalation_rule_action_failed
-
-    escalation_rule.save!
+    ) { escalation_rule.action.eval }
   end
 end

@@ -45,7 +45,6 @@ class Incident < ApplicationRecord
     !new_record? && resolved? && !team.marked_for_destruction
   end
 
-
   private
 
   def set_service_when_integration
