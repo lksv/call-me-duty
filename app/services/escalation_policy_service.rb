@@ -16,7 +16,13 @@ class EscalationPolicyService
 
       clone.escalation_rules.each do |escalation_rule|
         scheduled_at = base_time + escalation_rule.delay.second
-        jid = EscalationRuleWorker.perform_at(scheduled_at, escalation_rule.id)
+
+        jid = EscalationRuleWorker.perform_at(
+          scheduled_at,
+          escalation_rule.id,
+          incident.id
+        )
+
         IncidentAuditService.emit_escalation_rule_scheduled(
           incident: incident,
           escalation_rule: escalation_rule,

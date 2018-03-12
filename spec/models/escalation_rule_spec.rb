@@ -49,9 +49,12 @@ RSpec.describe EscalationRule, type: :model do
   describe '#condition' do
     it 'returns an instance of given condition' do
       subject = build(:escalation_rule, condition_type: 'true')
-      allow(subject).to receive(:incident).and_return(incident)
-      expect(subject.condition).to be_a(EscalationRule::TrueCondition)
-      expect(subject.condition.incident).to eq incident
+      expect(subject.condition(incident)).to be_a(EscalationRule::TrueCondition)
+    end
+
+    it 'passes incident to condition instance' do
+      subject = build(:escalation_rule, condition_type: 'true')
+      expect(subject.condition(incident).incident).to eq incident
     end
   end
 
@@ -59,11 +62,14 @@ RSpec.describe EscalationRule, type: :model do
     let(:target) { build(:user) }
 
     it 'returns an instance of given action' do
-      subject = build(:escalation_rule, action_type: 'user', target: target)
-      allow(subject).to receive(:incident).and_return(incident)
-      expect(subject.action).to be_a(EscalationRule::UserAction)
-      expect(subject.action.incident).to eq incident
-      expect(subject.action.target).to eq target
+      subject = build(:escalation_rule, action_type: 'user', targetable: target)
+      expect(subject.action(incident)).to be_a(EscalationRule::UserAction)
+    end
+
+    it 'passes target and incident to action instance' do
+      subject = build(:escalation_rule, action_type: 'user', targetable: target)
+      expect(subject.action(incident).incident).to eq incident
+      expect(subject.action(incident).target).to eq target
     end
   end
 end

@@ -24,6 +24,7 @@ class EscalationPolicy < ApplicationRecord
            dependent: :destroy,
            inverse_of: :escalation_policy
   has_many :incidents
+  has_many :targetable_escalation_rules, class_name: 'EscalationRule', as: :targetable
 
 
 

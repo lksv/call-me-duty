@@ -21,6 +21,7 @@ class Team < ApplicationRecord
   has_many :escalation_policies,  dependent: :destroy
   has_many :webhooks,             dependent: :destroy
   has_many :incidents,            dependent: :destroy
+  has_many :escalation_rules,     as: :targetable
   has_one :calendar,              dependent: :destroy
 
   validates :name, presence: true, uniqueness: true

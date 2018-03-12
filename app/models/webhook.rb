@@ -18,6 +18,7 @@
 
 class Webhook < ApplicationRecord
   belongs_to :team
+  has_many   :escalation_rules,     as: :targetable
 
   validates :uri, presence: true
   validates :uri, format: { with: URI.regexp }, allow_blank: false

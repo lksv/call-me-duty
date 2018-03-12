@@ -30,6 +30,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable
 
   has_many :calendar_events,        inverse_of: :user
+  has_many :escalation_rules,       as: :targetable
 
   has_and_belongs_to_many :teams
 end

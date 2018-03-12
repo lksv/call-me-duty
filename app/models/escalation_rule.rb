@@ -7,16 +7,16 @@
 #  condition_type       :integer          not null
 #  action_type          :integer          not null
 #  delay                :integer
-#  target_type          :string
-#  target_id            :integer
+#  targetable_type      :string
+#  targetable_id        :integer
 #  finished_at          :datetime
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #
 # Indexes
 #
-#  index_escalation_rules_on_escalation_policy_id       (escalation_policy_id)
-#  index_escalation_rules_on_target_type_and_target_id  (target_type,target_id)
+#  index_escalation_rules_on_escalation_policy_id               (escalation_policy_id)
+#  index_escalation_rules_on_targetable_type_and_targetable_id  (targetable_type,targetable_id)
 #
 
 # EscalationRule consists of three main parts:
@@ -29,25 +29,25 @@ class EscalationRule < ApplicationRecord
   enum action_type:     [:user, :team, :webhook, :close_incident, :reset_incident]
 
   belongs_to :escalation_policy,    inverse_of: :escalation_rules, touch: true
-  belongs_to :target, polymorphic: true, optional: true
+
+  # the target of notification. Could be: User, EscalationPolicy, Webhook
+  belongs_to :targetable, polymorphic: true, optional: true
 
   validates :delay, presence: true
-
-  delegate :incident, to: :escalation_policy
 
   def readonly?
     !new_record? && escalation_policy.readonly?
   end
 
-  def condition
+  def condition(incident)
     "EscalationRule::#{condition_type.camelize}Condition"
       .safe_constantize
       .new(incident)
   end
 
-  def action
+  def action(incident)
     "EscalationRule::#{action_type.camelize}Action"
       .safe_constantize
-      .new(target, incident)
+      .new(targetable, incident)
   end
 end

@@ -47,13 +47,13 @@ ActiveRecord::Schema.define(version: 20180311075636) do
     t.integer "condition_type", null: false
     t.integer "action_type", null: false
     t.integer "delay"
-    t.string "target_type"
-    t.integer "target_id"
+    t.string "targetable_type"
+    t.integer "targetable_id"
     t.datetime "finished_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["escalation_policy_id"], name: "index_escalation_rules_on_escalation_policy_id"
-    t.index ["target_type", "target_id"], name: "index_escalation_rules_on_target_type_and_target_id"
+    t.index ["targetable_type", "targetable_id"], name: "index_escalation_rules_on_targetable_type_and_targetable_id"
   end
 
   create_table "incidents", force: :cascade do |t|

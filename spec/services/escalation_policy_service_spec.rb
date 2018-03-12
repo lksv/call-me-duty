@@ -1,13 +1,5 @@
 require 'rails_helper'
 
-RSpec::Matchers.define :escalation_rule_scheduled do |x|
-  match do |actual|
-    (actual[:event] == escalation_rule_scheduled) and
-      (actual[:scheduled_at] == x[:scheduled_at])
-  end
-end
-
-
 RSpec.describe EscalationPolicyService do
   let(:escalation_rule3) { create(:escalation_rule, delay: 3) }
   let(:escalation_rule5) { create(:escalation_rule, delay: 5) }

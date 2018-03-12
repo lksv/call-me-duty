@@ -5,7 +5,7 @@ class CreateEscalationRules < ActiveRecord::Migration[5.1]
       t.integer     :condition_type,      defaut: '', null: false
       t.integer     :action_type,         defaut: '', null: false
       t.integer     :delay
-      t.references  :target, polymorphic: true
+      t.references  :targetable, polymorphic: true
       t.datetime    :finished_at
 
       t.timestamps

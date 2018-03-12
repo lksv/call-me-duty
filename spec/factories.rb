@@ -19,7 +19,7 @@ FactoryBot.define do
     escalation_policy
     condition_type    'not_acked'
     action_type       'user'
-    target            { escalation_policy.team.users.first || build(:user) }
+    targetable        { escalation_policy.team.users.first || build(:user) }
     delay             0
   end
 

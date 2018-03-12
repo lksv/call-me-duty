@@ -4,7 +4,10 @@ class UserNotificationService
     @user = user
   end
 
-  def execute
-    # TODO
+  def execute(base_time: Time.now)
+    EscalationPolicyService.new(
+      user.personal_escalation_policy,
+      incident
+    ).execute(base_time: base_time)
   end
 end
