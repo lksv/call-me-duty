@@ -58,5 +58,12 @@ class IncidentAuditService
       ) { yield }
     end
 
+    def emit_escalation_role_worker_error(msg, error_message)
+      emit(
+        msg: msg,
+        error_message: error_message
+      )
+    end
+
   end
 end

@@ -2,6 +2,19 @@ class EscalationRuleWorker
   include Sidekiq::Worker
   sidekiq_options :queue => :escalation_rule, :retry => 3, :backtrace => true
 
+  sidekiq_retry_in do |count|
+    10 * (count + 1) # (i.e. 10, 20, 30, 40, 50)
+  end
+
+  sidekiq_retries_exhausted do |msg, e|
+    # TODO
+    IncidentAuditService.emit_escalation_role_worker_error(
+      msg: msg['args'],
+      error_message: msg['error_message']
+    )
+    Sidekiq.logger.warn "Failed #{msg['class']} with #{msg['args']}: #{msg['error_message']}"
+  end
+
   attr_accessor :escalation_rule, :incident
 
   def perform(escalation_rule_id, incident_id)
