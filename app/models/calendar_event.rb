@@ -17,6 +17,9 @@
 #
 
 class CalendarEvent < ApplicationRecord
+  # notifications of :on_call_started and :on_call_finished
+  has_many :messages,  as: :messageable
+
   belongs_to :calendar,   inverse_of: :calendar_events, touch: true
   belongs_to :user,       inverse_of: :calendar_events
 

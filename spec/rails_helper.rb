@@ -9,6 +9,9 @@ require 'rspec/rails'
 require 'sidekiq/testing'
 Sidekiq::Testing.fake!
 
+require 'webmock/rspec'
+WebMock.disable_net_connect!(allow_localhost: true)
+
 
 # Add additional requires below this line. Rails is not loaded until this point!
 

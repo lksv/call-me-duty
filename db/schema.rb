@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180311075636) do
+ActiveRecord::Schema.define(version: 20180314223620) do
 
   create_table "calendar_events", force: :cascade do |t|
     t.integer "calendar_id"
@@ -25,9 +25,22 @@ ActiveRecord::Schema.define(version: 20180311075636) do
 
   create_table "calendars", force: :cascade do |t|
     t.integer "team_id"
+    t.integer "current_calendar_event_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["current_calendar_event_id"], name: "index_calendars_on_current_calendar_event_id"
     t.index ["team_id"], name: "index_calendars_on_team_id"
+  end
+
+  create_table "delivery_gateways", force: :cascade do |t|
+    t.string "name"
+    t.string "type"
+    t.integer "team_id"
+    t.text "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["team_id"], name: "index_delivery_gateways_on_team_id"
+    t.index ["type"], name: "index_delivery_gateways_on_type"
   end
 
   create_table "escalation_policies", force: :cascade do |t|
@@ -57,6 +70,7 @@ ActiveRecord::Schema.define(version: 20180311075636) do
   end
 
   create_table "incidents", force: :cascade do |t|
+    t.integer "iid", null: false
     t.integer "status"
     t.string "title", limit: 127
     t.text "description"
@@ -73,6 +87,7 @@ ActiveRecord::Schema.define(version: 20180311075636) do
     t.index ["escalation_policy_id"], name: "index_incidents_on_escalation_policy_id"
     t.index ["integration_id"], name: "index_incidents_on_integration_id"
     t.index ["service_id"], name: "index_incidents_on_service_id"
+    t.index ["team_id", "iid"], name: "index_incidents_on_team_id_and_iid", unique: true
     t.index ["team_id"], name: "index_incidents_on_team_id"
   end
 
@@ -86,6 +101,29 @@ ActiveRecord::Schema.define(version: 20180311075636) do
     t.index ["key"], name: "index_integrations_on_key"
     t.index ["name"], name: "index_integrations_on_name", unique: true
     t.index ["service_id"], name: "index_integrations_on_service_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.integer "status", null: false
+    t.integer "event", null: false
+    t.string "messageable_type"
+    t.integer "messageable_id"
+    t.string "static_gateway"
+    t.integer "delivery_gateway_id"
+    t.integer "user_id"
+    t.datetime "delivered_at"
+    t.string "gateway_request_uid"
+    t.datetime "answered_at"
+    t.datetime "ended_at"
+    t.float "cost"
+    t.integer "duration"
+    t.text "error_msg", limit: 1024
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["delivery_gateway_id"], name: "index_messages_on_delivery_gateway_id"
+    t.index ["event"], name: "index_messages_on_event"
+    t.index ["messageable_type", "messageable_id"], name: "index_messages_on_messageable_type_and_messageable_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "services", force: :cascade do |t|

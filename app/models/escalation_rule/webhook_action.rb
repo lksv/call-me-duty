@@ -3,12 +3,16 @@ class EscalationRule::WebhookAction < EscalationRule::BaseAction
     raise(
       ::EscalationRule::InvalidTargetError,
       "Expecting User got #{target.class}"
-    ) unless Webhook === target
+    ) unless WebhookGateway === target
 
     target
   end
 
   def execute
-    WebhookService.new(webhook).execute
+    WebhookNotificationService.new(
+      incident: incident,
+      gateway: webhook,
+      source: source
+    ).execute
   end
 end

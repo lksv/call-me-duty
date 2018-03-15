@@ -16,6 +16,96 @@ RSpec.describe Calendar, type: :model do
     end
   end
 
+  describe 'validates current_calendar_event_belongs_to_this_calendar' do
+    it 'pass validation when current_calendar_event is not set' do
+      subject = Calendar.new
+      subject.valid?
+      expect(subject.errors[:current_calendar_event].size).to be 0
+    end
+
+    it 'pass validation when current_calendar_event belongs to this calendar' do
+      calendar.current_calendar_event = event2017
+      calendar.valid?
+      expect(calendar.errors[:current_calendar_event].size).to be 0
+    end
+
+    it 'fails validating when current_calendar_event belongs_to another calendar' do
+      calendar.current_calendar_event = create(:calendar_event)
+      calendar.valid?
+      expect(calendar.errors[:current_calendar_event].size).to be 1
+    end
+  end
+
+  describe '#calculate_current_calendar_event' do
+    it 'keeps current_calendar_event if current time is in range' do
+      calendar.current_calendar_event = event2017
+      calendar.save!
+
+      expect(calendar).to_not receive(:event_at)
+      calendar.calculate_current_calendar_event(at: event2017.start_at)
+      expect(calendar.changed?).to be false
+    end
+
+    it 'calls sets current_calendar_event by #event_at when ' \
+       'current_calendar_event is not in current time range' do
+      event2018
+      calendar.current_calendar_event = event2017
+      calendar.save!
+
+      expect(calendar).to receive(:event_at).and_call_original
+      calendar.calculate_current_calendar_event(at: event2018.start_at)
+      expect(calendar.current_calendar_event).to eq event2018
+    end
+
+    it 'sets current_calendar_event to nil when no calendar_event exist in ' \
+       'current time range' do
+      event2019
+      calendar.current_calendar_event = event2017
+      calendar.save!
+      calendar.calculate_current_calendar_event(at: event2017.end_at)
+      expect(calendar.current_calendar_event).to eq nil
+    end
+  end
+
+  describe '#next_change_at' do
+    it 'returns end_at for current_calendar_event' do
+      calendar.current_calendar_event = event2017
+      expect(calendar.next_change_at(at: event2017.start_at)).to eq event2017.end_at
+    end
+
+    it 'returns start_at for first upcomming event when no current_calendar_event' do
+      event2017
+      expect(
+        calendar.next_change_at(at: DateTime.new(2000,1,1))
+      ).to eq event2017.start_at
+    end
+
+    it 'returns start_at for first upcomming event when `at` before ' \
+       'current_calendar_event' do
+      calendar.current_calendar_event = event2017
+      expect(
+        calendar.next_change_at(at: DateTime.new(2000,1,1))
+      ).to eq event2017.start_at
+    end
+
+    it 'returns nil when no current_calendar_event and no further events' do
+      expect(calendar.next_change_at(at: DateTime.new(2000,1,1))).to eq nil
+    end
+  end
+
+  # describe '#oncall_at' do
+  #   it 'returns nil when no user on call' do
+  #     expect(calendar.oncall_at(at: DateTime.new(2000,1,1))).to be nil
+  #   end
+
+  #   it 'returns an calendar_events user' do
+  #     event2017
+  #     expect(
+  #       calendar.oncall_at(at: DateTime.new(2017,2,2))
+  #     ).to eq event2017.user
+  #   end
+  # end
+
   describe '#event_at' do
     context 'when no event in calendar' do
       it 'returns nil' do

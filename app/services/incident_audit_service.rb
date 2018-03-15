@@ -8,17 +8,17 @@ class IncidentAuditService
     # base_time:         base_time
     def emit(*log_info)
       unless block_given?
-        puts('Audit Log: %s' % log_info.inspect)
+        # puts('Audit Log: %s' % log_info.inspect)
         return
       end
 
       result = nil
       begin
-        puts('Audit Log [starting]: %s' % log_info.inspect)
+        # puts('Audit Log [starting]: %s' % log_info.inspect)
         result = yield
-        puts('Audit Log [finished]: %s' % log_info.inspect)
+        # puts('Audit Log [finished]: %s' % log_info.inspect)
       rescue => err
-        puts("Failed to execute(%s): %s" % [err.to_s, log_info.inspect])
+        # puts("Failed to execute(%s): %s" % [err.to_s, log_info.inspect])
         raise
       end
       result

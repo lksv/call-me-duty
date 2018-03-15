@@ -1,0 +1,12 @@
+%h1
+  Incident
+  = @incident.title
+  was acknowledged!
+
+%h2 Incident:
+.incident
+  = @incident.inspect
+
+%h2 You:
+.recipient
+  = @user.inspect

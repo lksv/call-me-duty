@@ -1,24 +1,16 @@
-# README
+# Open source alerting and incident escalation tool
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a hobby project to create alerting and escalation tool.
 
-Things you may want to cover:
+Currently the focus is only to architecture, the model and services.
 
-* Ruby version
+It's too early to have bigger ambitions
 
-* System dependencies
 
-* Configuration
+# Development
 
-* Database creation
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+You need graphviz for rails-erd gem:
+```
+sudo apt-get install graphviz
+```

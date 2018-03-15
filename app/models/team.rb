@@ -19,21 +19,30 @@ class Team < ApplicationRecord
   has_and_belongs_to_many :users
   has_many :services,             dependent: :destroy
   has_many :escalation_policies,  dependent: :destroy
-  has_many :webhooks,             dependent: :destroy
+  #has_many :webhooks,             dependent: :destroy
   has_many :incidents,            dependent: :destroy
+  has_many :delivery_gateways,    dependent: :destroy
   has_many :escalation_rules,     as: :targetable
   has_one :calendar,              dependent: :destroy
 
   validates :name, presence: true, uniqueness: true
 
+  after_create :set_calendar
 
   strip_attributes only: :name, collapse_spaces: true, replace_newlines: true
+
+  delegate :current_oncall_user, to: :calendar, allow_nil: true
 
   # it must be set, before team.destroy
   attr_accessor :marked_for_destruction
 
-  def on_call
-    # TODO
-    escalation_policies&.first&.on_call
+  # def oncall_at(at: DateTime.now)
+  #   calendar&.oncall_at(at: at)
+  # end
+
+  private
+
+  def set_calendar
+    self.create_calendar!
   end
 end

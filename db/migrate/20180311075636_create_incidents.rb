@@ -1,8 +1,9 @@
 class CreateIncidents < ActiveRecord::Migration[5.1]
   def change
     create_table :incidents do |t|
+      t.integer :iid,                     null: false
       t.integer :status
-      t.string :title, limit: 127
+      t.string :title,                    limit: 127
       t.text :description
       t.text :data
       t.references :team,                 foreign_key: true
@@ -15,5 +16,6 @@ class CreateIncidents < ActiveRecord::Migration[5.1]
 
       t.timestamps
     end
+    add_index :incidents, [:team_id, :iid], unique: true
   end
 end

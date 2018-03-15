@@ -3,6 +3,7 @@
 # Table name: incidents
 #
 #  id                   :integer          not null, primary key
+#  iid                  :integer          not null
 #  status               :integer
 #  title                :string(127)
 #  description          :text
@@ -23,11 +24,15 @@
 #  index_incidents_on_integration_id        (integration_id)
 #  index_incidents_on_service_id            (service_id)
 #  index_incidents_on_team_id               (team_id)
+#  index_incidents_on_team_id_and_iid       (team_id,iid) UNIQUE
 #
 
 class Incident < ApplicationRecord
   enum status:     [:created, :triggred, :acked, :snoozed, :resolved]
   enum priority:   [:critical, :warn, :info]
+
+  # notifications of :incident_created, :incident_acked and :incident_resolved
+  has_many :messages,  as: :messageable
 
   belongs_to :team
   belongs_to :integration,          optional: true
@@ -39,10 +44,16 @@ class Incident < ApplicationRecord
   before_validation :set_service_when_integration
 
   validate :integration_belongs_to_service
-
+  validate :set_iid,                on: :create
+  validates :iid,                   presence: true, numericality: true
+  validates :iid,                   uniqueness: { scope: :team }
 
   def readonly?
     !new_record? && resolved? && !team.marked_for_destruction
+  end
+
+  def to_param
+    iid.to_s
   end
 
   private
@@ -58,5 +69,10 @@ class Incident < ApplicationRecord
     unless integration.service == service
       errors.add(:integration, "Integratin has to belong to the same service")
     end
+  end
+
+  def set_iid
+    return if iid.present?
+    self.iid = team.incidents.maximum(:iid).to_i + 1
   end
 end

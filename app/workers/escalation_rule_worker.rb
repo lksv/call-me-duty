@@ -7,7 +7,7 @@ class EscalationRuleWorker
   end
 
   sidekiq_retries_exhausted do |msg, e|
-    # TODO
+    # TODO - write test
     IncidentAuditService.emit_escalation_role_worker_error(
       msg: msg['args'],
       error_message: msg['error_message']

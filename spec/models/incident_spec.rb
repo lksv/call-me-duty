@@ -1,7 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Incident, type: :model do
-  subject { create(:incident) }
+  let(:team)  { create(:team) }
+  subject     { create(:incident, team: team) }
+
   describe 'FactoryBot.create(:incident)' do
     it 'creates incident' do
       subject
@@ -15,6 +17,37 @@ RSpec.describe Incident, type: :model do
       subject.service = create(:service)
       expect(subject.valid?).to be false
       expect(subject.errors[:integration].size).to eq 1
+    end
+
+    it 'validates uniqueness of iid in team' do
+      existing = create(:incident, team: team)
+      subject
+      subject.iid = existing.iid
+      expect(subject.valid?).to be false
+      expect(subject.errors[:iid].size).to eq 1
+    end
+  end
+
+  describe '#set_iid' do
+    let(:team)  { FactoryBot.create(:team) }
+    subject     { build(:incident, iid: 1234, team_id: 1) }
+
+    it 'keep iid as is when iid is set' do
+      subject.send(:set_iid)
+      expect(subject.iid).to eq 1234
+    end
+
+    it 'sets iid as maximum(:iid) + 1' do
+      _old = create(:incident, iid: 1234, team: team)
+      subject = build(:incident, team: team)
+      subject.send(:set_iid)
+      expect(subject.iid).to eq 1235
+    end
+  end
+
+  describe '#to_param' do
+    it 'returns iid' do
+      expect(subject.to_param).to eq subject.iid.to_s
     end
   end
 

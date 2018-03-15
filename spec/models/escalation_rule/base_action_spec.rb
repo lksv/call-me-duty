@@ -9,7 +9,9 @@ RSpec.describe EscalationRule::BaseAction, type: :model do
     double('Incident Instance', title: 'TITLE', description: 'DESC')
   end
 
-  subject { EscalationRule::BaseAction.new(target, incident) }
+  let(:escalation_rule) { double("EscalationRule") }
+
+  subject { EscalationRule::BaseAction.new(target, incident, escalation_rule) }
 
   describe '#title' do
     it 'contains incidents title' do

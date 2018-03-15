@@ -12,6 +12,12 @@ gem 'devise-async'
 gem 'strip_attributes'
 gem 'sidekiq'
 gem 'settingslogic'
+gem 'haml-rails', '~> 1.0'
+gem 'httparty'
+gem 'webmock'
+
+gem 'messagebird-rest', :require => 'messagebird'
+gem 'nexmo'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.5'

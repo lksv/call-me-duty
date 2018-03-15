@@ -45,13 +45,13 @@ RSpec.describe Team, type: :model do
       }.to change(EscalationRule, :count).by(-2)
     end
 
-    it 'removes all webhooks' do
-      webhook = create(:webhook)
-      subject = webhook.team
-      expect {
-        subject.destroy!
-      }.to change(Webhook, :count).by(-1)
-    end
+    #it 'removes all webhooks' do
+    #  webhook = create(:webhook)
+    #  subject = webhook.team
+    #  expect {
+    #    subject.destroy!
+    #  }.to change(Webhook, :count).by(-1)
+    #end
 
     it 'removes all incidents' do
       subject = create(:team)

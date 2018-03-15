@@ -5,7 +5,7 @@ RSpec.describe EscalationRule, type: :model do
     it 'validates presence of delay' do
       subject = build(:escalation_rule, delay: nil)
       subject.valid?
-      expect(subject.errors[:delay].size).to eq 1
+      expect(subject.errors[:delay].size).to eq 2
     end
   end
 
@@ -22,7 +22,7 @@ RSpec.describe EscalationRule, type: :model do
 
   describe 'associations' do
     it 'it sets an EscalationPolicy association' do
-      subject = create(:escalation_rule, action_type: 'user')
+      subject = create(:escalation_rule, action_type: 'user_email')
       expect(subject.escalation_policy.escalation_rules).to include(subject)
     end
   end
@@ -62,12 +62,12 @@ RSpec.describe EscalationRule, type: :model do
     let(:target) { build(:user) }
 
     it 'returns an instance of given action' do
-      subject = build(:escalation_rule, action_type: 'user', targetable: target)
-      expect(subject.action(incident)).to be_a(EscalationRule::UserAction)
+      subject = build(:escalation_rule, action_type: 'user_email', targetable: target)
+      expect(subject.action(incident)).to be_a(EscalationRule::UserEmailAction)
     end
 
     it 'passes target and incident to action instance' do
-      subject = build(:escalation_rule, action_type: 'user', targetable: target)
+      subject = build(:escalation_rule, action_type: 'user_email', targetable: target)
       expect(subject.action(incident).incident).to eq incident
       expect(subject.action(incident).target).to eq target
     end

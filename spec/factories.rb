@@ -1,4 +1,34 @@
 FactoryBot.define do
+  factory :webhook_gateway do
+    sequence(:name)     { |n| "Webhook name no. #{n}" }
+    type      'WebhookGateway'
+    uri       'https://example.com/'
+    template  '{ "title": {{{title | toJson}} }'
+    http_method    'POST'
+    team
+  end
+
+  factory :delivery_gateway do
+    sequence(:name) { |n| "My Outbound Integration no. #{n}" }
+    type 'EmailGateway'
+    team
+    data "{}"
+  end
+
+  factory :message do
+    event           :incident_created
+    delivery_gateway
+    user            do |message|
+      team = message.delivery_gateway.team
+      team.users.first || create(:user, teams: [ team ])
+    end
+    status          :created
+    delivered_at    nil
+    messageable do |message|
+      create(:incident, team: message.delivery_gateway.team)
+    end
+  end
+
   factory :incident do
     team
     status          'created'
@@ -7,18 +37,10 @@ FactoryBot.define do
     alert_trigged_count 1
   end
 
-  factory :webhook do
-    sequence(:name)     { |n| "Webhook name no. #{n}" }
-    team
-    token               { SecureRandom.hex(3) }
-    uri                 "http://example.com/"
-    template            "basic template {{title}}\nDescription: {{description}}"
-  end
-
   factory :escalation_rule do
     escalation_policy
     condition_type    'not_acked'
-    action_type       'user'
+    action_type       'user_email'
     targetable        { escalation_policy.team.users.first || build(:user) }
     delay             0
   end
@@ -53,6 +75,7 @@ FactoryBot.define do
 
   factory :team do
     sequence(:name) { |n| "Team name no. #{n}" }
+    #after(:create) { team.create_calendar }
   end
 
 

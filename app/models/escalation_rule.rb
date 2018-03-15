@@ -26,14 +26,19 @@
 # * `#action`, the action which will be executed in case of successful condition
 class EscalationRule < ApplicationRecord
   enum condition_type:  [:true, :not_acked, :not_resolved]
-  enum action_type:     [:user, :team, :webhook, :close_incident, :reset_incident]
+  enum action_type:     [
+    :on_call_email, :on_call_voice_call,
+    :user_email, :user_voice_call,
+    :webhook,
+    :close_incident, # reset_escalation_policy
+  ]
 
   belongs_to :escalation_policy,    inverse_of: :escalation_rules, touch: true
 
   # the target of notification. Could be: User, EscalationPolicy, Webhook
   belongs_to :targetable, polymorphic: true, optional: true
 
-  validates :delay, presence: true
+  validates :delay, presence: true, numericality: true
 
   def readonly?
     !new_record? && escalation_policy.readonly?
@@ -48,6 +53,6 @@ class EscalationRule < ApplicationRecord
   def action(incident)
     "EscalationRule::#{action_type.camelize}Action"
       .safe_constantize
-      .new(targetable, incident)
+      .new(targetable, incident, self)
   end
 end
