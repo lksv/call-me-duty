@@ -2,7 +2,7 @@ class CreateIncidents < ActiveRecord::Migration[5.1]
   def change
     create_table :incidents do |t|
       t.integer :iid,                     null: false
-      t.integer :status
+      t.integer :status,                  default: 0
       t.string :title,                    limit: 127
       t.text :description
       t.text :data

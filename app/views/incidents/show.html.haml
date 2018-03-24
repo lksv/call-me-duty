@@ -1,0 +1,28 @@
+.page-header
+  = link_to incidents_path, class: 'btn btn-default' do
+    %span.glyphicon.glyphicon-list-alt
+    Back
+  = link_to edit_incident_path(@incident), class: 'btn btn-primary' do
+    %span.glyphicon.glyphicon-pencil
+    Edit
+  %h1 Show incident
+
+%dl.dl-horizontal
+  %dt Iid:
+  %dd= @incident.iid
+  %dt Status:
+  %dd= @incident.status
+  %dt Title:
+  %dd= @incident.title
+  %dt Description:
+  %dd= @incident.description
+  %dt Team:
+  %dd= @incident.team
+  %dt Integration:
+  %dd= @incident.integration
+  %dt Service:
+  %dd= @incident.service
+  %dt Escalation policy:
+  %dd= @incident.escalation_policy
+  %dt Priority:
+  %dd= @incident.priority

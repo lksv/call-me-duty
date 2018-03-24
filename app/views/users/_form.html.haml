@@ -1,0 +1,11 @@
+-# frozen_string_literal: true
+= simple_form_for(@user) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :name
+    = f.input :phone
+    = f.input :email
+
+  .form-actions
+    = f.button :submit

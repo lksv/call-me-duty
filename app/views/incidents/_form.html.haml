@@ -1,0 +1,15 @@
+-# frozen_string_literal: true
+= simple_form_for(@incident) do |f|
+  = f.error_notification
+
+  .form-inputs
+    - unless f.object.new_record?
+      = f.input :status, collection: Incident.statuses.keys, include_blank: false
+    = f.input :title
+    = f.input :description
+    = f.association :team, collection: current_user.teams, include_blank: false
+    = f.association :service
+    = f.input :priority, collection: Incident.priorities.keys, include_blank: false
+
+  .form-actions
+    = f.button :submit

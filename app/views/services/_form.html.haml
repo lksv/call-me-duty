@@ -1,0 +1,13 @@
+-# frozen_string_literal: true
+-nested_route = @service.new_record? ? [@team, @service] : @service
+= simple_form_for(nested_route) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :name
+    = f.input :description
+    - if f.object.new_record?
+      = f.association :team
+
+  .form-actions
+    = f.button :submit

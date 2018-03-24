@@ -1,0 +1,26 @@
+.page-header
+  = link_to [:new, @team, :escalation_policy], class: 'btn btn-primary' do
+    %span.glyphicon.glyphicon-plus
+    New Escalation policy
+  %h1 Listing escalation_policies
+
+.table-responsive
+  %table.table.table-striped.table-bordered.table-hover
+    %thead
+      %tr
+        %th Name
+        %th Description
+        %th Team
+        %th
+        %th
+        %th
+
+    %tbody
+      - @escalation_policies.each do |escalation_policy|
+        %tr
+          %td= escalation_policy.name
+          %td= escalation_policy.description
+          %td= escalation_policy.team.name
+          %td= link_to 'Show', escalation_policy
+          %td= link_to 'Edit', edit_escalation_policy_path(escalation_policy)
+          %td= link_to 'Destroy', escalation_policy, data: { confirm: 'Are you sure?' }, method: :delete

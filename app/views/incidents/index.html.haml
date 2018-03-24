@@ -1,0 +1,30 @@
+.page-header
+  = link_to new_incident_path, class: 'btn btn-primary' do
+    %span.glyphicon.glyphicon-plus
+    New Incident
+  %h1 Listing incidents
+
+.table-responsive
+  %table.table.table-striped.table-bordered.table-hover
+    %thead
+      %tr
+        %th Iid
+        %th Status
+        %th Title
+        %th Description
+        %th Priority
+        %th
+        %th
+        %th
+
+    %tbody
+      - @incidents.each do |incident|
+        %tr
+          %td= incident.iid
+          %td= incident.status
+          %td= incident.title
+          %td= incident.description
+          %td= incident.priority
+          %td= link_to 'Show', incident
+          %td= link_to 'Edit', edit_incident_path(incident)
+          %td= link_to 'Destroy', incident, data: { confirm: 'Are you sure?' }, method: :delete

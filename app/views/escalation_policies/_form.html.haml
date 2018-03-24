@@ -1,0 +1,19 @@
+-# frozen_string_literal: true
+- nested_route = @escalation_policy.new_record? ? [@team, @escalation_policy] : @escalation_policy
+= simple_form_for(nested_route) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :name
+    = f.input :description
+
+    %h3 Escalation Rules
+    #escalation_rules
+
+      = f.simple_fields_for :escalation_rules do |er|
+        = render 'escalation_rule_fields', f: er
+      .links
+        = link_to_add_association 'add', f, :escalation_rules
+
+  .form-actions
+    = f.button :submit

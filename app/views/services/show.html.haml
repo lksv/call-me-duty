@@ -1,0 +1,16 @@
+.page-header
+  = link_to [@team, :services], class: 'btn btn-default' do
+    %span.glyphicon.glyphicon-list-alt
+    Back
+  = link_to edit_service_path(@service), class: 'btn btn-primary' do
+    %span.glyphicon.glyphicon-pencil
+    Edit
+  %h1 Show service
+
+%dl.dl-horizontal
+  %dt Name:
+  %dd= @service.name
+  %dt Description:
+  %dd= @service.description
+  %dt Team:
+  %dd= @service.team.name

@@ -1,0 +1,13 @@
+-# frozen_string_literal: true
+
+- nested_route = @integration.new_record? ? [@service, @integration] : @integration
+= simple_form_for(nested_route) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :name
+    = f.input :type, collection: Integration.types.keys
+    = f.association :service
+
+  .form-actions
+    = f.button :submit

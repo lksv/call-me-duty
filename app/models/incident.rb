@@ -28,8 +28,8 @@
 #
 
 class Incident < ApplicationRecord
-  enum status:     [:created, :triggred, :acked, :snoozed, :resolved]
-  enum priority:   [:critical, :warn, :info]
+  enum status:     { created: 0, triggred: 1, acked: 2, snoozed: 3, resolved: 10 }
+  enum priority:   { critical: 0, warn: 5, info: 10 }
 
   # notifications of :incident_created, :incident_acked and :incident_resolved
   has_many :messages,  as: :messageable
@@ -72,7 +72,7 @@ class Incident < ApplicationRecord
   end
 
   def set_iid
-    return if iid.present?
+    return if iid.present? or team.nil?
     self.iid = team.incidents.maximum(:iid).to_i + 1
   end
 end

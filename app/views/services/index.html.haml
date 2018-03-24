@@ -1,0 +1,27 @@
+.page-header
+  = link_to [:new, @team, :service], class: 'btn btn-primary' do
+    %span.glyphicon.glyphicon-plus
+    New Service
+  %h1
+    Listing services for
+    %i= @team.name
+    team
+
+.table-responsive
+  %table.table.table-striped.table-bordered.table-hover
+    %thead
+      %tr
+        %th Name
+        %th Team
+        %th
+        %th
+        %th
+
+    %tbody
+      - @services.each do |service|
+        %tr
+          %td= service.name
+          %td= service.team.name
+          %td= link_to 'Show', service
+          %td= link_to 'Edit', edit_service_path(service)
+          %td= link_to 'Destroy', service, data: { confirm: 'Are you sure?' }, method: :delete

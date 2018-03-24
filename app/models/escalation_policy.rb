@@ -47,6 +47,10 @@ class EscalationPolicy < ApplicationRecord
 
   validate :name_uniqueness_for_not_cloned
 
+  accepts_nested_attributes_for :escalation_rules,
+    reject_if: :all_blank,
+    allow_destroy: true
+
   strip_attributes only: :name, collapse_spaces: true, replace_newlines: true
 
   scope :prime, -> { where(clonned_from: nil) }

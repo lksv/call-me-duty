@@ -1,0 +1,31 @@
+.page-header
+  = link_to [:new, @service, :integration], class: 'btn btn-primary' do
+    %span.glyphicon.glyphicon-plus
+    New Integration
+  %h1
+    Listing service
+    %i= @service.name
+    integrations
+
+.table-responsive
+  %table.table.table-striped.table-bordered.table-hover
+    %thead
+      %tr
+        %th Name
+        %th Key
+        %th Type
+        %th Service
+        %th
+        %th
+        %th
+
+    %tbody
+      - @integrations.each do |integration|
+        %tr
+          %td= integration.name
+          %td= integration.key
+          %td= integration.type
+          %td= integration.service.name
+          %td= link_to 'Show', integration
+          %td= link_to 'Edit', edit_integration_path(integration)
+          %td= link_to 'Destroy', integration, data: { confirm: 'Are you sure?' }, method: :delete

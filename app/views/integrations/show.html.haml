@@ -1,0 +1,18 @@
+.page-header
+  = link_to [@service, :integrations], class: 'btn btn-default' do
+    %span.glyphicon.glyphicon-list-alt
+    Back
+  = link_to edit_integration_path(@integration), class: 'btn btn-primary' do
+    %span.glyphicon.glyphicon-pencil
+    Edit
+  %h1 Show integration
+
+%dl.dl-horizontal
+  %dt Name:
+  %dd= @integration.name
+  %dt Key:
+  %dd= @integration.key
+  %dt Type:
+  %dd= @integration.type
+  %dt Service:
+  %dd= @integration.service.name

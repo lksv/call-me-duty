@@ -16,6 +16,7 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  phone                  :string
+#  name                   :string
 #
 # Indexes
 #
@@ -33,4 +34,8 @@ class User < ApplicationRecord
   has_many :escalation_rules,       as: :targetable
 
   has_and_belongs_to_many :teams
+
+  def services
+    Service.where(team_id: teams)
+  end
 end

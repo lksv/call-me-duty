@@ -16,9 +16,11 @@ gem 'haml-rails', '~> 1.0'
 gem 'httparty'
 gem 'webmock'
 
+gem 'jquery-rails'
 gem 'bootstrap'
 gem 'bootstrap-generators', git: 'git://github.com/decioferreira/bootstrap-generators.git'
-
+gem 'simple_form'
+gem 'cocoon'
 
 gem 'messagebird-rest', :require => 'messagebird'
 gem 'nexmo'

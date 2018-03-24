@@ -1,0 +1,9 @@
+.nested-fields
+  = f.input :delay
+  = f.input :condition_type, collection: EscalationRule.condition_types.keys
+  = f.input :action_type,    collection: EscalationRule.action_types.keys
+
+  = f.input :targetable_type, as: :hidden, value: ''
+  = f.input :targetable_id, label: 'User',    collection: @team.users
+  = f.input :targetable_id, label: 'Webhook', collection: @team.webhook_gateways
+  = link_to_remove_association "remove", f

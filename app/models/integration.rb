@@ -20,7 +20,7 @@
 class Integration < ApplicationRecord
   Integration.inheritance_column = nil
 
-  enum type: [:prometheus]
+  enum type: {prometheus: 1}
 
   belongs_to :service
   has_many   :incidents
@@ -28,7 +28,7 @@ class Integration < ApplicationRecord
   has_secure_token :key
 
   validates :key, uniqueness: true
-  validates :type, presence: true
+  validates :type, presence: true, allow_nil: false
 
   delegate :team, to: :service
 

@@ -22,6 +22,7 @@ class Team < ApplicationRecord
   #has_many :webhooks,             dependent: :destroy
   has_many :incidents,            dependent: :destroy
   has_many :delivery_gateways,    dependent: :destroy
+  has_many :webhook_gateways
   has_many :escalation_rules,     as: :targetable
   has_one :calendar,              dependent: :destroy
 
