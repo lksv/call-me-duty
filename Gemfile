@@ -16,6 +16,10 @@ gem 'haml-rails', '~> 1.0'
 gem 'httparty'
 gem 'webmock'
 
+gem 'bootstrap'
+gem 'bootstrap-generators', git: 'git://github.com/decioferreira/bootstrap-generators.git'
+
+
 gem 'messagebird-rest', :require => 'messagebird'
 gem 'nexmo'
 
