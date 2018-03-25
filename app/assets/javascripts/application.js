@@ -18,5 +18,6 @@
 //= require bootstrap-sprockets
 //x= xrequire bootstrap // > While bootstrap-sprockets provides individual Bootstrap components for ease of debugging, you may alternatively require the concatenated bootstrap for faster compilation
 //= require cocoon
+//= require vis
 
 //= require_tree .

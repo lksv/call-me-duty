@@ -1,0 +1,22 @@
+.page-header
+  = link_to new_calendar_path, class: 'btn btn-primary' do
+    %span.glyphicon.glyphicon-plus
+    New Calendar
+  %h1 Listing calendars
+
+.table-responsive
+  %table.table.table-striped.table-bordered.table-hover
+    %thead
+      %tr
+        %th Team
+        %th
+        %th
+        %th
+
+    %tbody
+      - @calendars.each do |calendar|
+        %tr
+          %td= calendar.team
+          %td= link_to 'Show', calendar
+          %td= link_to 'Edit', edit_calendar_path(calendar)
+          %td= link_to 'Destroy', calendar, data: { confirm: 'Are you sure?' }, method: :delete

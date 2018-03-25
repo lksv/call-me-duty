@@ -21,6 +21,7 @@ gem 'bootstrap'
 gem 'bootstrap-generators', git: 'git://github.com/decioferreira/bootstrap-generators.git'
 gem 'simple_form'
 gem 'cocoon'
+gem 'vis-gem'
 
 gem 'messagebird-rest', :require => 'messagebird'
 gem 'nexmo'

@@ -1,0 +1,9 @@
+-# frozen_string_literal: true
+= simple_form_for(@calendar) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.association :team
+
+  .form-actions
+    = f.button :submit

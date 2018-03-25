@@ -1,0 +1,22 @@
+.page-header
+  = link_to calendars_path, class: 'btn btn-default' do
+    %span.glyphicon.glyphicon-list-alt
+    Back
+  = link_to edit_calendar_path(@calendar), class: 'btn btn-primary' do
+    %span.glyphicon.glyphicon-pencil
+    Edit
+  %h1
+    Show
+    %i= @calendar.team.name
+    teams calendar
+
+%dl.row
+  %dt.col-sm-2 Team:
+  %dd.col-sm-10= @calendar.team.name
+  %dt.col-sm-2 Currently on call:
+  %dd.col-sm-10= oncall_user(@calendar.current_oncall_user)
+
+
+%h4 Schedule
+
+#calendar-schedule{data: { calendar_events: @calendar_events.to_json} }

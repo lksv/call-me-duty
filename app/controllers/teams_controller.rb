@@ -1,5 +1,5 @@
 class TeamsController < ApplicationController
-  before_action :set_team, only: [:show, :edit, :update, :destroy]
+  before_action :set_team, only: [:show, :edit, :update, :destroy, :calendar]
 
   # GET /teams
   # GET /teams.json
@@ -59,6 +59,13 @@ class TeamsController < ApplicationController
       format.html { redirect_to teams_url, notice: 'Team was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def calendar
+    @calendar = @team.calendar
+    @calendar_events = @calendar.calendar_events.includes(:user)
+
+    render 'calendars/show'
   end
 
   private
