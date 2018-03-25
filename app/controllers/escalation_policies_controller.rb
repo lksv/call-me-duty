@@ -1,6 +1,7 @@
 class EscalationPoliciesController < ApplicationController
   before_action :set_team, only: [:index, :new, :create]
   before_action :set_escalation_policy, only: [:show, :edit, :update, :destroy]
+  before_action :set_targetables, only: [:new, :create, :edit, :update]
 
   # GET /escalation_policies
   # GET /escalation_policies.json
@@ -73,6 +74,12 @@ class EscalationPoliciesController < ApplicationController
       @team = current_user.teams.find(params[:team_id])
     end
 
+    def set_targetables
+      @targetables =
+        current_user.visible_users.map { |u| [u.name, [u.id, 'User'].join(',')] } +
+        current_user.visible_delivery_gateways.map { |u| [u.name, [u.id, u.type].join(',')] }
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def escalation_policy_params
       params.require(:escalation_policy).permit(
@@ -84,8 +91,7 @@ class EscalationPoliciesController < ApplicationController
           :delay,
           :condition_type,
           :action_type,
-          :targetable_type,
-          :targetable_id
+          :targetable_pair
         ])
     end
 end

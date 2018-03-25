@@ -13,7 +13,9 @@
       = f.simple_fields_for :escalation_rules do |er|
         = render 'escalation_rule_fields', f: er
       .links
-        = link_to_add_association 'add', f, :escalation_rules
+        = link_to_add_association f, :escalation_rules do
+          %span.btn.btn-mini.btn-info.float-right
+            %span.oi.oi-plus Add Rule
 
   .form-actions
     = f.button :submit

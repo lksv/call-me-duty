@@ -39,6 +39,7 @@ class EscalationRule < ApplicationRecord
   belongs_to :targetable, polymorphic: true, optional: true
 
   validates :delay, presence: true, numericality: true
+  validate :validate_targetable_type
 
   def readonly?
     !new_record? && escalation_policy.readonly?
@@ -54,5 +55,37 @@ class EscalationRule < ApplicationRecord
     "EscalationRule::#{action_type.camelize}Action"
       .safe_constantize
       .new(targetable, incident, self)
+  end
+
+  # Used by EscalationPoliciesController's
+  # #new and #edit actions in nested form
+  def targetable_pair
+    [targetable_id, targetable_type].join(',')
+  end
+
+  def targetable_pair=(attribute)
+    self.targetable_id, self.targetable_type = attribute.split(',')
+  end
+
+  private
+
+  def validate_targetable_type
+    case action_type
+    when 'user_email', 'user_voice_call'
+      unless targetable_type == 'User'
+        errors.add(:targetable_pair, "needs to be WebhookGateway for #{action_type} action")
+        return false
+      end
+    when 'webhook'
+      unless targetable_type == 'WebhookGateway'
+        errors.add(:targetable_pair, "needs to be WebhookGateway for #{action_type} action")
+        return false
+      end
+    else
+      unless targetable_type.nil?
+        errors.add(:targetable_pair, "needs to be nil for #{action_type} action")
+        return false
+      end
+    end
   end
 end

@@ -38,4 +38,12 @@ class User < ApplicationRecord
   def services
     Service.where(team_id: teams)
   end
+
+  def visible_users
+    User.joins(:teams).where(teams_users: {team_id: teams}).distinct
+  end
+
+  def visible_delivery_gateways
+    DeliveryGateway.where(team_id: teams).distinct
+  end
 end

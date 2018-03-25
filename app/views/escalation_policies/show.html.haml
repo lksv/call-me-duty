@@ -7,10 +7,26 @@
     Edit
   %h1 Show escalation_policy
 
-%dl.dl-horizontal
-  %dt Name:
-  %dd= @escalation_policy.name
-  %dt Description:
-  %dd= @escalation_policy.description
-  %dt Team:
-  %dd= @escalation_policy.team.name
+%dl.row
+  %dt.col-sm-2 Name:
+  %dd.col-sm-10= @escalation_policy.name
+  %dt.col-sm-2 Description:
+  %dd.col-sm-10= @escalation_policy.description
+  %dt.col-sm-2 Team:
+  %dd.col-sm-10= @escalation_policy.team.name
+  .card
+    .card-header Escalation Rules
+    %ul.list-group.list-group-flush
+    - @escalation_policy.escalation_rules.each do |escalation_rule|
+      %li.list-group-item
+        %dl.row
+          %dt.col-sm-3 Delay:
+          %dd.col-sm-9= escalation_rule.delay
+          %dt.col-sm-3 Condition:
+          %dd.col-sm-9= escalation_rule.condition_type
+          %dt.col-sm-3 Action:
+          %dd.col-sm-9= escalation_rule.action_type
+          - if escalation_rule.targetable
+            %dt.col-sm-3= escalation_rule.targetable_type
+            %dd.col-sm-9= escalation_rule.targetable.name
+
