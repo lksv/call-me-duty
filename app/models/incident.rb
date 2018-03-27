@@ -4,7 +4,7 @@
 #
 #  id                   :integer          not null, primary key
 #  iid                  :integer          not null
-#  status               :integer
+#  status               :integer          default("created")
 #  title                :string(127)
 #  description          :text
 #  data                 :text

@@ -57,7 +57,7 @@ class IntegrationsController < ApplicationController
   def destroy
     @integration.destroy
     respond_to do |format|
-      format.html { redirect_to integrations_url, notice: 'Integration was successfully destroyed.' }
+      format.html { redirect_to [@service, :integrations], notice: 'Integration was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

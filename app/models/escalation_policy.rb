@@ -45,6 +45,7 @@ class EscalationPolicy < ApplicationRecord
            inverse_of: :clonned_from
 
 
+  validates :name, presence: true, allow_nil: false
   validate :name_uniqueness_for_not_cloned
 
   accepts_nested_attributes_for :escalation_rules,

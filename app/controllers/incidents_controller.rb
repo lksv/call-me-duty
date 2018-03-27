@@ -25,8 +25,6 @@ class IncidentsController < ApplicationController
   # POST /incidents.json
   def create
     @incident = Incident.new(incident_params)
-    p @incident.valid?
-    p @incident.errors
 
     respond_to do |format|
       if @incident.save

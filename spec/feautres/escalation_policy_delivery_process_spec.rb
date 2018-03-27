@@ -24,8 +24,8 @@ RSpec.describe "EscalationPolicy delivery process", type: :feature do
 
   let(:escalation_policy) do
     ep = create(:escalation_policy, team: team)
-    create(:escalation_rule, escalation_policy: ep, delay: 1, action_type: 'on_call_email')
-    create(:escalation_rule, escalation_policy: ep, delay: 2, action_type: 'on_call_voice_call')
+    create(:escalation_rule, escalation_policy: ep, delay: 1, action_type: 'on_call_email', targetable: nil)
+    create(:escalation_rule, escalation_policy: ep, delay: 2, action_type: 'on_call_voice_call', targetable: nil)
 
     create(:escalation_rule, escalation_policy: ep, delay: 3, action_type: 'user_email', targetable: user_bob)
     create(:escalation_rule, escalation_policy: ep, delay: 4, action_type: 'user_voice_call', targetable: user_bob)

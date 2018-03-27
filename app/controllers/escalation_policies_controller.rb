@@ -58,7 +58,7 @@ class EscalationPoliciesController < ApplicationController
   def destroy
     @escalation_policy.destroy
     respond_to do |format|
-      format.html { redirect_to escalation_policies_url, notice: 'Escalation policy was successfully destroyed.' }
+      format.html { redirect_to [@team, :escalation_policies], notice: 'Escalation policy was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -86,7 +86,6 @@ class EscalationPoliciesController < ApplicationController
         :name,
         :description,
         escalation_rules_attributes: [
-          :id,
           :_destroy,
           :delay,
           :condition_type,

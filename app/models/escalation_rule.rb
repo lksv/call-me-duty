@@ -73,11 +73,11 @@ class EscalationRule < ApplicationRecord
     case action_type
     when 'user_email', 'user_voice_call'
       unless targetable_type == 'User'
-        errors.add(:targetable_pair, "needs to be WebhookGateway for #{action_type} action")
+        errors.add(:targetable_pair, "needs to be User for #{action_type} action")
         return false
       end
     when 'webhook'
-      unless targetable_type == 'WebhookGateway'
+      unless targetable_type == 'DeliveryGateway' && WebhookGateway === targetable
         errors.add(:targetable_pair, "needs to be WebhookGateway for #{action_type} action")
         return false
       end

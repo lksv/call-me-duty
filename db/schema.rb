@@ -71,7 +71,7 @@ ActiveRecord::Schema.define(version: 20180324193703) do
 
   create_table "incidents", force: :cascade do |t|
     t.integer "iid", null: false
-    t.integer "status"
+    t.integer "status", default: 0
     t.string "title", limit: 127
     t.text "description"
     t.text "data"
@@ -94,7 +94,7 @@ ActiveRecord::Schema.define(version: 20180324193703) do
   create_table "integrations", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.string "key"
-    t.string "type"
+    t.integer "type"
     t.integer "service_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
