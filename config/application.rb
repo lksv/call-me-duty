@@ -18,8 +18,9 @@ module CallMePager
     config.active_job.queue_adapter = :sidekiq
 
     # config.active_record.schema_format = :sql
-    config.eager_load_paths.push(
-      *%W[#{config.root}/app/models/integrations
+    config.eager_load_paths.push(*%W[
+                                 #{config.root}/app/models/integrations
+                                 #{config.root}/app/models/delivery_gateways
     ])
     config.autoload_paths = config.eager_load_paths.dup
 
