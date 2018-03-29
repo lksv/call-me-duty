@@ -7,12 +7,12 @@
     Edit
   %h1 Show integration
 
-%dl.dl-horizontal
-  %dt Name:
-  %dd= @integration.name
-  %dt Key:
-  %dd= @integration.key
-  %dt Type:
-  %dd= @integration.type
-  %dt Service:
-  %dd= @integration.service.name
+%dl.row
+  %dt.col-sm-2 Name:
+  %dd.col-sm-10= @integration.name
+  %dt.col-sm-2 Key:
+  %dd.col-sm-10= @integration.key
+  %dt.col-sm-2 Type:
+  %dd.col-sm-10= @integration.type
+  %dt.col-sm-2 Service:
+  %dd.col-sm-10= @integration.service.name

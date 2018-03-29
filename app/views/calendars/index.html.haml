@@ -16,7 +16,7 @@
     %tbody
       - @calendars.each do |calendar|
         %tr
-          %td= calendar.team
+          %td= calendar.team_name
           %td= link_to 'Show', calendar
           %td= link_to 'Edit', edit_calendar_path(calendar)
           %td= link_to 'Destroy', calendar, data: { confirm: 'Are you sure?' }, method: :delete

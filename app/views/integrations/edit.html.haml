@@ -2,7 +2,7 @@
   = link_to [@service, :integrations], class: 'btn btn-default' do
     %span.glyphicon.glyphicon-list-alt
     Back
-  = link_to [:edit, @integration], class: 'btn btn-primary' do
+  = link_to edit_integration_path(@integration), class: 'btn btn-primary' do
     %span.glyphicon.glyphicon-info-sign
     Show
   %h1 Editing integration

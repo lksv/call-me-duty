@@ -48,6 +48,11 @@ class Incident < ApplicationRecord
   validates :iid,                   presence: true, numericality: true
   validates :iid,                   uniqueness: { scope: :team }
 
+  delegate :name, to: :service, prefix: true, allow_nil: true
+  delegate :name, to: :team, prefix: true, allow_nil: true
+  delegate :name, to: :integration, prefix: true, allow_nil: true
+  delegate :name, to: :escalation_policy, prefix: true, allow_nil: true
+
   def readonly?
     !new_record? && resolved? && !team.marked_for_destruction
   end

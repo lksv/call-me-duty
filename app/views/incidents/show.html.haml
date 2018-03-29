@@ -7,22 +7,22 @@
     Edit
   %h1 Show incident
 
-%dl.dl-horizontal
-  %dt Iid:
-  %dd= @incident.iid
-  %dt Status:
-  %dd= @incident.status
-  %dt Title:
-  %dd= @incident.title
-  %dt Description:
-  %dd= @incident.description
-  %dt Team:
-  %dd= @incident.team
-  %dt Integration:
-  %dd= @incident.integration
-  %dt Service:
-  %dd= @incident.service
-  %dt Escalation policy:
-  %dd= @incident.escalation_policy
-  %dt Priority:
-  %dd= @incident.priority
+%dl.row
+  %dt.col-sm-2 Iid:
+  %dd.col-sm-10= @incident.iid
+  %dt.col-sm-2 Status:
+  %dd.col-sm-10= @incident.status
+  %dt.col-sm-2 Title:
+  %dd.col-sm-10= @incident.title
+  %dt.col-sm-2 Description:
+  %dd.col-sm-10= @incident.description
+  %dt.col-sm-2 Team:
+  %dd.col-sm-10= @incident.team_name
+  %dt.col-sm-2 Integration:
+  %dd.col-sm-10= @incident.integration_name
+  %dt.col-sm-2 Service:
+  %dd.col-sm-10= @incident.service_name
+  %dt.col-sm-2 Escalation policy:
+  %dd.col-sm-10= @incident.escalation_policy_name
+  %dt.col-sm-2 Priority:
+  %dd.col-sm-10= @incident.priority

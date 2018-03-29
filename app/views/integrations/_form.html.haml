@@ -1,12 +1,12 @@
 -# frozen_string_literal: true
 
-- nested_route = @integration.new_record? ? [@service, @integration] : @integration
+- nested_route = @integration.new_record? ? [@service, @integration] : @integration.becomes(Integration)
 = simple_form_for(nested_route) do |f|
   = f.error_notification
 
   .form-inputs
     = f.input :name
-    = f.input :type, collection: Integration.types.keys
+    = f.input :type, collection: %W(Prometheus)
     = f.association :service
 
   .form-actions

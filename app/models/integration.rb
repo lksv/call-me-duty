@@ -27,6 +27,7 @@ class Integration < ApplicationRecord
   validates :type, presence: true, allow_nil: false
 
   delegate :team, to: :service
+  delegate :name, to: :service, prefix: true
 
   strip_attributes only: :name, collapse_spaces: true, replace_newlines: true
 end

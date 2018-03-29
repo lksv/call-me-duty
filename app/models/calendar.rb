@@ -25,6 +25,7 @@ class Calendar < ApplicationRecord
   validate :current_calendar_event_belongs_to_this_calendar
 
   delegate :users, to: :team
+  delegate :name, to: :team, prefix: true
 
   def current_oncall_user
     current_calendar_event&.user

@@ -1,25 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe "services/index", type: :view do
+  let(:team)          { create(:team) }
+  let(:service1)       { create(:service, team: team) }
+  let(:service2)       { create(:service, team: team) }
+
   before(:each) do
-    assign(:services, [
-      Service.create!(
-        :name => "Name",
-        :description => "MyText",
-        :team => nil
-      ),
-      Service.create!(
-        :name => "Name",
-        :description => "MyText",
-        :team => nil
-      )
-    ])
+    assign(:team, team)
+    assign(:services, [service1, service2])
   end
 
   it "renders a list of services" do
     render
-    assert_select "tr>td", :text => "Name".to_s, :count => 2
-    assert_select "tr>td", :text => "MyText".to_s, :count => 2
-    assert_select "tr>td", :text => nil.to_s, :count => 2
+    assert_select 'tr>td', text: 'Show', :count => 2
+    assert_select 'tr>td', text: service1.name, :count => 1
+    assert_select 'tr>td', text: service2.name, :count => 1
   end
 end

@@ -1,18 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe "calendars/new", type: :view do
+  let(:team)            { create(:team) }
+  let(:calendar)        { build(:calendar, team: team) }
+
   before(:each) do
-    assign(:calendar, Calendar.new(
-      :team => nil
-    ))
+    @calendar = assign(:calendar, calendar)
+    assign(:team, team)
   end
 
   it "renders new calendar form" do
     render
 
     assert_select "form[action=?][method=?]", calendars_path, "post" do
-
-      assert_select "input[name=?]", "calendar[team_id]"
+      assert_select "select[name=?]", "calendar[team_id]"
     end
   end
 end

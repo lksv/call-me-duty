@@ -25,7 +25,7 @@
           %td= integration.name
           %td= integration.key
           %td= integration.type
-          %td= integration.service.name
-          %td= link_to 'Show', integration
+          %td= integration.service_name
+          %td= link_to 'Show', integration.becomes(Integration)
           %td= link_to 'Edit', edit_integration_path(integration)
-          %td= link_to 'Destroy', integration, data: { confirm: 'Are you sure?' }, method: :delete
+          %td= link_to 'Destroy', integration.becomes(Integration), data: { confirm: 'Are you sure?' }, method: :delete

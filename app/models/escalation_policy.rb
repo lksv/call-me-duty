@@ -54,6 +54,8 @@ class EscalationPolicy < ApplicationRecord
 
   strip_attributes only: :name, collapse_spaces: true, replace_newlines: true
 
+  delegate :name, to: :team, prefix: true
+
   scope :prime, -> { where(clonned_from: nil) }
 
   def readonly?

@@ -7,6 +7,8 @@
     Edit
   %h1 Show user
 
-%dl.dl-horizontal
-  %dt Name:
-  %dd= @user.name
+%dl.row
+  %dt.col-sm-2 Name:
+  %dd.col-sm-10= @user.name
+  %dt.col-sm-2 Email:
+  %dd.col-sm-10= @user.email
