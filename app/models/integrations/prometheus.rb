@@ -17,16 +17,6 @@
 #  index_integrations_on_service_id  (service_id)
 #
 
-class Integration < ApplicationRecord
-  belongs_to :service
-  has_many   :incidents
-
-  has_secure_token :key
-
-  validates :key, uniqueness: true
-  validates :type, presence: true, allow_nil: false
-
-  delegate :team, to: :service
-
-  strip_attributes only: :name, collapse_spaces: true, replace_newlines: true
+class Prometheus < Integration
+  validates :type, inclusion: { in: %w(Prometheus) }
 end

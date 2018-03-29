@@ -88,7 +88,7 @@ FactoryBot.define do
 
   factory :integration do
     sequence(:name) { |n| "Integratin name no. #{n}" }
-    type            :prometheus
+    type            'Prometheus'
     service
   end
 end

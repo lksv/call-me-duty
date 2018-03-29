@@ -94,7 +94,7 @@ ActiveRecord::Schema.define(version: 20180324193703) do
   create_table "integrations", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.string "key"
-    t.integer "type"
+    t.string "type"
     t.integer "service_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
