@@ -1,5 +1,4 @@
-
-$(document).on("turbolinks:load", function() {
+export default function setCalendar() {
   var container = document.getElementById('calendar-schedule');
 
   if (! container) {
@@ -110,4 +109,4 @@ $(document).on("turbolinks:load", function() {
   timeline.setGroups(groups);
   timeline.setItems(items);
   console.log('Timeline initialized!');
-})
+}
