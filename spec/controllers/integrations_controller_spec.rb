@@ -54,13 +54,13 @@ RSpec.describe IntegrationsController, type: :controller do
 
       it "redirects to the created integration" do
         post :create, params: {service_id: service.to_param, integration: valid_attributes}
-        expect(response).to redirect_to(Integration.last)
+        expect(response).to redirect_to(integration_path(Integration.last))
       end
     end
 
     context "with invalid params" do
-      it "returns a success response (i.e. to display the 'new' template)" do
-        skip('skipping... rails bug')
+      it "returns a success response (i.e. to display the 'new' template)" do 
+        skip('dont know yet how to validate type')
         post :create, params: {service_id: service.to_param, integration: invalid_attributes}
         expect(response).to be_success
       end
@@ -84,13 +84,12 @@ RSpec.describe IntegrationsController, type: :controller do
       it "redirects to the integration" do
         integration = Integration.create! valid_attributes
         put :update, params: {id: integration.to_param, integration: valid_attributes}
-        expect(response).to redirect_to(integration)
+        expect(response).to redirect_to(integration_path(integration))
       end
     end
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'edit' template)" do
-        skip('skipping... rails bug')
         integration = Integration.create! valid_attributes
         put :update, params: {id: integration.to_param, integration: invalid_attributes}
         expect(response).to be_success

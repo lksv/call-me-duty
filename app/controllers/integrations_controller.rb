@@ -29,7 +29,7 @@ class IntegrationsController < ApplicationController
 
     respond_to do |format|
       if @integration.save
-        format.html { redirect_to @integration, notice: 'Integration was successfully created.' }
+        format.html { redirect_to integration_path(@integration), notice: 'Integration was successfully created.' }
         format.json { render :show, status: :created, location: @integration }
       else
         format.html { render :new }
@@ -43,7 +43,7 @@ class IntegrationsController < ApplicationController
   def update
     respond_to do |format|
       if @integration.update(integration_params)
-        format.html { redirect_to @integration, notice: 'Integration was successfully updated.' }
+        format.html { redirect_to integration_path(@integration), notice: 'Integration was successfully updated.' }
         format.json { render :show, status: :ok, location: @integration }
       else
         format.html { render :edit }
