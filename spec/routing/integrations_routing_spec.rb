@@ -4,11 +4,11 @@ RSpec.describe IntegrationsController, type: :routing do
   describe "routing" do
 
     it "routes to #index" do
-      expect(:get => "/integrations").to route_to("integrations#index")
+      expect(:get => "/services/2/integrations").to route_to(controller:"integrations", action: "index", service_id: "2")
     end
 
     it "routes to #new" do
-      expect(:get => "/integrations/new").to route_to("integrations#new")
+      expect(:get => "/services/2/integrations/new").to route_to(controller:"integrations", action: "new", service_id: "2")
     end
 
     it "routes to #show" do
@@ -20,7 +20,7 @@ RSpec.describe IntegrationsController, type: :routing do
     end
 
     it "routes to #create" do
-      expect(:post => "/integrations").to route_to("integrations#create")
+      expect(:post => "/services/2/integrations").to route_to(controller:"integrations", action: "create", service_id: "2")
     end
 
     it "routes to #update via PUT" do

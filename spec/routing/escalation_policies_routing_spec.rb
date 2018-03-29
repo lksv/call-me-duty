@@ -4,11 +4,11 @@ RSpec.describe EscalationPoliciesController, type: :routing do
   describe "routing" do
 
     it "routes to #index" do
-      expect(:get => "/escalation_policies").to route_to("escalation_policies#index")
+      expect(:get => "/teams/2/escalation_policies").to route_to(controller: "escalation_policies", action: "index", team_id: "2")
     end
 
     it "routes to #new" do
-      expect(:get => "/escalation_policies/new").to route_to("escalation_policies#new")
+      expect(:get => "/teams/2/escalation_policies/new").to route_to(team_id: "2", controller: "escalation_policies", action: "new")
     end
 
     it "routes to #show" do
@@ -20,7 +20,7 @@ RSpec.describe EscalationPoliciesController, type: :routing do
     end
 
     it "routes to #create" do
-      expect(:post => "/escalation_policies").to route_to("escalation_policies#create")
+      expect(:post => "/teams/2/escalation_policies").to route_to(controller: "escalation_policies", action: "create", team_id: "2")
     end
 
     it "routes to #update via PUT" do
