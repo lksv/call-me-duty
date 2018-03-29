@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   devise_for :users
 
   resources :teams do
-    get  :calendar, on: :member
+    get  :calendar, on: :member, as: :calendar
     resources :services, shallow: true do
       resources :integrations, shallow: true
     end

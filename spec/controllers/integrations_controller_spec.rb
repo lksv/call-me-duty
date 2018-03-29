@@ -2,10 +2,11 @@ require 'rails_helper'
 
 RSpec.describe IntegrationsController, type: :controller do
 
-  let(:team) { create(:team) }
-  let(:user) { create(:user, teams: [team]) }
+  let(:team)            { create(:team) }
+  let(:user)            { create(:user, teams: [team]) }
+  let(:service)         { create(:service, team: team) }
+  let(:integration)     { create(:integration, service: service) }
 
-  let(:service)          { create(:service, team: team) }
   let(:valid_attributes) { attributes_for(:integration, service_id: service.id) }
   let(:invalid_attributes) { {type: 'invalid type'} }
 
@@ -15,7 +16,7 @@ RSpec.describe IntegrationsController, type: :controller do
 
   describe "GET #index" do
     it "returns a success response" do
-      integration = Integration.create! valid_attributes
+      integration
       get :index, params: {service_id: service.to_param}
       expect(response).to be_success
     end
@@ -23,7 +24,7 @@ RSpec.describe IntegrationsController, type: :controller do
 
   describe "GET #show" do
     it "returns a success response" do
-      integration = Integration.create! valid_attributes
+      integration
       get :show, params: {id: integration.to_param}
       expect(response).to be_success
     end
@@ -38,7 +39,7 @@ RSpec.describe IntegrationsController, type: :controller do
 
   describe "GET #edit" do
     it "returns a success response" do
-      integration = Integration.create! valid_attributes
+      integration
       get :edit, params: {id: integration.to_param}
       expect(response).to be_success
     end
@@ -82,7 +83,7 @@ RSpec.describe IntegrationsController, type: :controller do
       # end
 
       it "redirects to the integration" do
-        integration = Integration.create! valid_attributes
+        integration
         put :update, params: {id: integration.to_param, integration: valid_attributes}
         expect(response).to redirect_to(integration_path(integration))
       end
@@ -90,7 +91,7 @@ RSpec.describe IntegrationsController, type: :controller do
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'edit' template)" do
-        integration = Integration.create! valid_attributes
+        integration
         put :update, params: {id: integration.to_param, integration: invalid_attributes}
         expect(response).to be_success
       end
@@ -99,17 +100,16 @@ RSpec.describe IntegrationsController, type: :controller do
 
   describe "DELETE #destroy" do
     it "destroys the requested integration" do
-      integration = Integration.create! valid_attributes
+      integration
       expect {
         delete :destroy, params: {id: integration.to_param}
       }.to change(Integration, :count).by(-1)
     end
 
     it "redirects to the integrations list" do
-      integration = Integration.create! valid_attributes
+      integration
       delete :destroy, params: {id: integration.to_param}
       expect(response).to redirect_to([service, :integrations])
     end
   end
-
 end

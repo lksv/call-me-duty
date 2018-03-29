@@ -4,8 +4,9 @@ RSpec.describe CalendarsController, type: :controller do
 
   let(:team)                { create(:team) }
   let(:user)                { create(:user, teams: [team]) }
-  let(:valid_attributes)    { attributes_for(:calendar, team: nil, team_id: team.id) }
+  let(:calendar)            { team.calendar }
 
+  let(:valid_attributes)    { attributes_for(:calendar, team: nil, team_id: team.id) }
   let(:invalid_attributes)  { { current_calendar_event_id: 12345 } }
 
   before(:each) do
@@ -14,7 +15,7 @@ RSpec.describe CalendarsController, type: :controller do
 
   describe "GET #index" do
     it "returns a success response" do
-      calendar = Calendar.create! valid_attributes
+      calendar
       get :index, params: {}
       expect(response).to be_success
     end
@@ -22,7 +23,7 @@ RSpec.describe CalendarsController, type: :controller do
 
   describe "GET #show" do
     it "returns a success response" do
-      calendar = Calendar.create! valid_attributes
+      calendar
       get :show, params: {id: calendar.to_param}
       expect(response).to be_success
     end
@@ -37,7 +38,7 @@ RSpec.describe CalendarsController, type: :controller do
 
   describe "GET #edit" do
     it "returns a success response" do
-      calendar = Calendar.create! valid_attributes
+      calendar
       get :edit, params: {id: calendar.to_param}
       expect(response).to be_success
     end
@@ -73,14 +74,14 @@ RSpec.describe CalendarsController, type: :controller do
       }
 
       it "updates the requested calendar" do
-        calendar = Calendar.create! valid_attributes
+        calendar
         put :update, params: {id: calendar.to_param, calendar: new_attributes}
         calendar.reload
         expect(calendar.team).to eq other_team
       end
 
       it "redirects to the calendar" do
-        calendar = Calendar.create! valid_attributes
+        calendar
         put :update, params: {id: calendar.to_param, calendar: valid_attributes}
         expect(response).to redirect_to(calendar)
       end
@@ -89,7 +90,7 @@ RSpec.describe CalendarsController, type: :controller do
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'edit' template)" do
         skip('there is nothing what could be changed for now')
-        calendar = Calendar.create! valid_attributes
+        calendar
         put :update, params: {id: calendar.to_param, calendar: invalid_attributes}
         expect(response).to be_success
       end
@@ -98,17 +99,16 @@ RSpec.describe CalendarsController, type: :controller do
 
   describe "DELETE #destroy" do
     it "destroys the requested calendar" do
-      calendar = Calendar.create! valid_attributes
+      calendar
       expect {
         delete :destroy, params: {id: calendar.to_param}
       }.to change(Calendar, :count).by(-1)
     end
 
     it "redirects to the calendars list" do
-      calendar = Calendar.create! valid_attributes
+      calendar
       delete :destroy, params: {id: calendar.to_param}
       expect(response).to redirect_to(calendars_url)
     end
   end
-
 end

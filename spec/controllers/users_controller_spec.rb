@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
+  let(:user) { create(:user) }
+
   let(:valid_attributes) do
     attributes_for(
       :user,
@@ -12,7 +14,7 @@ RSpec.describe UsersController, type: :controller do
 
   describe "GET #index" do
     it "returns a success response" do
-      user = User.create! valid_attributes
+      user
       get :index, params: {}
       expect(response).to be_success
     end
@@ -20,7 +22,7 @@ RSpec.describe UsersController, type: :controller do
 
   describe "GET #show" do
     it "returns a success response" do
-      user = User.create! valid_attributes
+      user
       get :show, params: {id: user.to_param}
       expect(response).to be_success
     end
@@ -35,7 +37,7 @@ RSpec.describe UsersController, type: :controller do
 
   describe "GET #edit" do
     it "returns a success response" do
-      user = User.create! valid_attributes
+      user
       get :edit, params: {id: user.to_param}
       expect(response).to be_success
     end
@@ -70,14 +72,14 @@ RSpec.describe UsersController, type: :controller do
       }
 
       it "updates the requested user" do
-        user = User.create! valid_attributes
+        user
         put :update, params: {id: user.to_param, user: new_attributes}
         user.reload
         expect(user.name).to eq 'John Black'
       end
 
       it "redirects to the user" do
-        user = User.create! valid_attributes
+        user
         put :update, params: {id: user.to_param, user: valid_attributes}
         expect(response).to redirect_to(user)
       end
@@ -85,7 +87,7 @@ RSpec.describe UsersController, type: :controller do
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'edit' template)" do
-        user = User.create! valid_attributes
+        user
         put :update, params: {id: user.to_param, user: invalid_attributes}
         expect(response).to be_success
       end
@@ -94,14 +96,14 @@ RSpec.describe UsersController, type: :controller do
 
   describe "DELETE #destroy" do
     it "destroys the requested user" do
-      user = User.create! valid_attributes
+      user
       expect {
         delete :destroy, params: {id: user.to_param}
       }.to change(User, :count).by(-1)
     end
 
     it "redirects to the users list" do
-      user = User.create! valid_attributes
+      user
       delete :destroy, params: {id: user.to_param}
       expect(response).to redirect_to(users_url)
     end

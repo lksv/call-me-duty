@@ -2,8 +2,9 @@ require 'rails_helper'
 
 RSpec.describe ServicesController, type: :controller do
 
-  let(:team) { create(:team) }
-  let(:user) { create(:user, teams: [team]) }
+  let(:team)    { create(:team) }
+  let(:user)    { create(:user, teams: [team]) }
+  let(:service) { create(:service, team: team) }
 
   let(:valid_attributes) {
     attributes_for(:service).merge(team_id: team.to_param)
@@ -19,7 +20,7 @@ RSpec.describe ServicesController, type: :controller do
 
   describe "GET #index" do
     it "returns a success response" do
-      service = Service.create! valid_attributes
+      service
       get :index, params: {team_id: team.to_param}
       expect(response).to be_success
     end
@@ -27,7 +28,7 @@ RSpec.describe ServicesController, type: :controller do
 
   describe "GET #show" do
     it "returns a success response" do
-      service = Service.create! valid_attributes
+      service
       get :show, params: {id: service.to_param}
       expect(response).to be_success
     end
@@ -42,7 +43,7 @@ RSpec.describe ServicesController, type: :controller do
 
   describe "GET #edit" do
     it "returns a success response" do
-      service = Service.create! valid_attributes
+      service
       get :edit, params: {id: service.to_param}
       expect(response).to be_success
     end
@@ -77,14 +78,14 @@ RSpec.describe ServicesController, type: :controller do
       }
 
       it "updates the requested service" do
-        service = Service.create! valid_attributes
+        service
         put :update, params: {id: service.to_param, service: new_attributes}
         service.reload
         expect(service.name).to eq 'new name'
       end
 
       it "redirects to the service" do
-        service = Service.create! valid_attributes
+        service
         put :update, params: {id: service.to_param, service: valid_attributes}
         expect(response).to redirect_to(service)
       end
@@ -92,7 +93,7 @@ RSpec.describe ServicesController, type: :controller do
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'edit' template)" do
-        service = Service.create! valid_attributes
+        service
         put :update, params: {id: service.to_param, service: invalid_attributes}
         expect(response).to be_success
       end
@@ -101,14 +102,14 @@ RSpec.describe ServicesController, type: :controller do
 
   describe "DELETE #destroy" do
     it "destroys the requested service" do
-      service = Service.create! valid_attributes
+      service
       expect {
         delete :destroy, params: {id: service.to_param}
       }.to change(Service, :count).by(-1)
     end
 
     it "redirects to the services list" do
-      service = Service.create! valid_attributes
+      service
       delete :destroy, params: {id: service.to_param}
       expect(response).to redirect_to([team, :services])
     end

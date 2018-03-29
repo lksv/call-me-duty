@@ -3,12 +3,14 @@ require 'rails_helper'
 RSpec.describe IncidentsController, type: :controller do
 
   let(:team)              { create(:team) }
+  let(:incident) { create(:incident, team: team) }
+
   let(:valid_attributes)  { attributes_for(:incident, team_id: team.id) }
   let(:invalid_attributes) { attributes_for(:incident, title: ' ') }
 
   describe "GET #index" do
     it "returns a success response" do
-      incident = Incident.create! valid_attributes
+      incident
       get :index, params: {}
       expect(response).to be_success
     end
@@ -16,7 +18,7 @@ RSpec.describe IncidentsController, type: :controller do
 
   describe "GET #show" do
     it "returns a success response" do
-      incident = Incident.create! valid_attributes
+      incident
       get :show, params: {id: incident.to_param}
       expect(response).to be_success
     end
@@ -31,7 +33,7 @@ RSpec.describe IncidentsController, type: :controller do
 
   describe "GET #edit" do
     it "returns a success response" do
-      incident = Incident.create! valid_attributes
+      incident
       get :edit, params: {id: incident.to_param}
       expect(response).to be_success
     end
@@ -66,14 +68,14 @@ RSpec.describe IncidentsController, type: :controller do
       }
 
       it "updates the requested incident" do
-        incident = Incident.create! valid_attributes
+        incident
         put :update, params: {id: incident.to_param, incident: new_attributes}
         incident.reload
         expect(incident.title).to eq 'new title'
       end
 
       it "redirects to the incident" do
-        incident = Incident.create! valid_attributes
+        incident
         put :update, params: {id: incident.to_param, incident: valid_attributes}
         expect(response).to redirect_to(incident)
       end
@@ -81,7 +83,7 @@ RSpec.describe IncidentsController, type: :controller do
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'edit' template)" do
-        incident = Incident.create! valid_attributes
+        incident
         put :update, params: {id: incident.to_param, incident: invalid_attributes}
         expect(response).to be_success
       end

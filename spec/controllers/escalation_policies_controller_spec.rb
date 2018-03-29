@@ -2,12 +2,12 @@ require 'rails_helper'
 
 RSpec.describe EscalationPoliciesController, type: :controller do
 
-  let(:team) { create(:team) }
-  let(:user) { create(:user, teams: [team]) }
+  let(:team)                { create(:team) }
+  let(:user)                { create(:user, teams: [team]) }
+  let(:escalation_policy)   { create(:escalation_policy, team: team) }
 
-  let(:valid_attributes) { attributes_for(:escalation_policy, team_id: team.id) }
-
-  let(:invalid_attributes) { {team_id: team.to_param, name: ''} }
+  let(:valid_attributes)    { attributes_for(:escalation_policy, team_id: team.id) }
+  let(:invalid_attributes)  { {team_id: team.to_param, name: ''} }
 
   before(:each) do
     sign_in user
@@ -15,7 +15,7 @@ RSpec.describe EscalationPoliciesController, type: :controller do
 
   describe "GET #index" do
     it "returns a success response" do
-      escalation_policy = EscalationPolicy.create! valid_attributes
+      escalation_policy
       get :index, params: {team_id: team.to_param}
       expect(response).to be_success
     end
@@ -23,7 +23,7 @@ RSpec.describe EscalationPoliciesController, type: :controller do
 
   describe "GET #show" do
     it "returns a success response" do
-      escalation_policy = EscalationPolicy.create! valid_attributes
+      escalation_policy
       get :show, params: {id: escalation_policy.to_param}
       expect(response).to be_success
     end
@@ -38,7 +38,7 @@ RSpec.describe EscalationPoliciesController, type: :controller do
 
   describe "GET #edit" do
     it "returns a success response" do
-      escalation_policy = EscalationPolicy.create! valid_attributes
+      escalation_policy
       get :edit, params: {id: escalation_policy.to_param}
       expect(response).to be_success
     end
@@ -85,7 +85,7 @@ RSpec.describe EscalationPoliciesController, type: :controller do
       }
 
       it "updates the requested escalation_policy" do
-        escalation_policy = EscalationPolicy.create! valid_attributes
+        escalation_policy
         put :update, params: {id: escalation_policy.to_param, escalation_policy: new_attributes}
         escalation_policy.reload
         expect(escalation_policy.name).to eq 'new name'
@@ -98,7 +98,7 @@ RSpec.describe EscalationPoliciesController, type: :controller do
       end
 
       it "redirects to the escalation_policy" do
-        escalation_policy = EscalationPolicy.create! valid_attributes
+        escalation_policy
         put :update, params: {id: escalation_policy.to_param, escalation_policy: valid_attributes}
         expect(response).to redirect_to(escalation_policy)
       end
@@ -106,7 +106,7 @@ RSpec.describe EscalationPoliciesController, type: :controller do
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'edit' template)" do
-        escalation_policy = EscalationPolicy.create! valid_attributes
+        escalation_policy
         put :update, params: {id: escalation_policy.to_param, escalation_policy: invalid_attributes}
         expect(response).to be_success
       end
@@ -115,14 +115,14 @@ RSpec.describe EscalationPoliciesController, type: :controller do
 
   describe "DELETE #destroy" do
     it "destroys the requested escalation_policy" do
-      escalation_policy = EscalationPolicy.create! valid_attributes
+      escalation_policy
       expect {
         delete :destroy, params: {id: escalation_policy.to_param}
       }.to change(EscalationPolicy, :count).by(-1)
     end
 
     it "redirects to the escalation_policies list" do
-      escalation_policy = EscalationPolicy.create! valid_attributes
+      escalation_policy
       delete :destroy, params: {id: escalation_policy.to_param}
       expect(response).to redirect_to([team, :escalation_policies])
     end
