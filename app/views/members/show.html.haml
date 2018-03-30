@@ -1,0 +1,14 @@
+.page-header
+  = link_to team_members_path(@team), class: 'btn btn-default' do
+    %span.glyphicon.glyphicon-list-alt
+    Back
+  = link_to edit_member_path(@member), class: 'btn btn-primary' do
+    %span.glyphicon.glyphicon-pencil
+    Edit
+  %h1 Show member
+
+%dl.row
+  %dt.col-sm-2 Access level:
+  %dd.col-sm-10= @member.access_level_symbol
+  %dt.col-sm-2 User:
+  %dd.col-sm-10= @member.user_name

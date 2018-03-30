@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180324193703) do
+ActiveRecord::Schema.define(version: 20180330180723) do
 
   create_table "calendar_events", force: :cascade do |t|
     t.integer "calendar_id"
@@ -103,6 +103,19 @@ ActiveRecord::Schema.define(version: 20180324193703) do
     t.index ["service_id"], name: "index_integrations_on_service_id"
   end
 
+  create_table "members", force: :cascade do |t|
+    t.string "type"
+    t.integer "user_id"
+    t.integer "team_id"
+    t.integer "access_level", null: false
+    t.integer "created_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_members_on_created_by_id"
+    t.index ["team_id"], name: "index_members_on_team_id"
+    t.index ["user_id"], name: "index_members_on_user_id"
+  end
+
   create_table "messages", force: :cascade do |t|
     t.integer "status", null: false
     t.integer "event", null: false
@@ -139,9 +152,17 @@ ActiveRecord::Schema.define(version: 20180324193703) do
   create_table "teams", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.text "description"
+    t.integer "parent_id"
+    t.integer "owner_id"
+    t.string "slug", default: "", null: false
+    t.string "full_path", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_teams_on_name", unique: true
+    t.index ["full_path"], name: "index_teams_on_full_path", unique: true
+    t.index ["owner_id"], name: "index_teams_on_owner_id"
+    t.index ["parent_id", "name"], name: "index_teams_on_parent_id_and_name", unique: true
+    t.index ["parent_id", "slug"], name: "index_teams_on_parent_id_and_slug", unique: true
+    t.index ["parent_id"], name: "index_teams_on_parent_id"
   end
 
   create_table "teams_users", id: false, force: :cascade do |t|

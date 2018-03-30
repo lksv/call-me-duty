@@ -3,11 +3,12 @@ require 'rails_helper'
 RSpec.describe UsersController, type: :controller do
   let(:user) { create(:user) }
 
+  let(:organization)        { create(:organization) }
   let(:valid_attributes) do
     attributes_for(
       :user,
       password: '123456',
-      password_confirmation: '123456'
+      password_confirmation: '123456',
     )
   end
   let(:invalid_attributes) { attributes_for(:user, email: ' ') }

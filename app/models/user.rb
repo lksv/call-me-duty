@@ -33,14 +33,22 @@ class User < ApplicationRecord
   has_many :calendar_events,        inverse_of: :user
   has_many :escalation_rules,       as: :targetable
 
-  has_and_belongs_to_many :teams
+  has_many :members
+  has_many :teams, through: :members
+  has_many :organizations, -> { where(parent_id: nil) }, through: :members, source: 'team'
+
+  # has_and_belongs_to_many :teams
 
   def services
     Service.where(team_id: teams)
   end
 
   def visible_users
-    User.joins(:teams).where(teams_users: {team_id: teams}).distinct
+    all_team_ids = organizations.each do |slug|
+      Team.where('full_path like ?', "#{slug}/%").pluck(:id)
+    end.flatten.uniq
+
+    User.joins(:members).where(members: { team_id: all_team_ids })
   end
 
   def visible_delivery_gateways

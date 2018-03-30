@@ -2,13 +2,12 @@ require 'rails_helper'
 
 RSpec.describe TeamsController, type: :controller do
 
-  let(:valid_attributes)    { attributes_for(:team) }
-  let(:invalid_attributes)  { {name:' '} }
   let(:team) { create(:team) }
+  let(:valid_attributes)    { attributes_for(:team, parent_id: team.id) }
+  let(:invalid_attributes)  { {name:' '} }
 
   describe "GET #index" do
     it "returns a success response" do
-      team
       get :index, params: {}
       expect(response).to be_success
     end
@@ -48,6 +47,7 @@ RSpec.describe TeamsController, type: :controller do
   describe "POST #create" do
     context "with valid params" do
       it "creates a new Team" do
+        team
         expect {
           post :create, params: {team: valid_attributes}
         }.to change(Team, :count).by(1)

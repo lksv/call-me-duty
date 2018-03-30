@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       resources :integrations, shallow: true
     end
     resources :escalation_policies, shallow: true
+    resources :members, shallow: true
   end
 
   resources :incidents

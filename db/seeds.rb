@@ -3,8 +3,11 @@
 
 raise 'Remove following part!' if Rails.env.production?
 
+o = Organization.create!(name: 'MyGigaCorp')
+
 u = User.new(
   id: 1,
+  organizations: [o],
   email: 'lukas.svoboda@gmail.com',
   password: '123456',
   password_confirmation: '123456',

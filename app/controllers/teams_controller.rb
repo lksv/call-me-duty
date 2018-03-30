@@ -71,11 +71,12 @@ class TeamsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_team
-      @team = Team.find(params[:id])
+      @team = Team.find_by(full_path: params[:id])
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
+    # TODO I cannot set any parent_id, but only of organization the
+    # current_user is a member of
     def team_params
-      params.require(:team).permit(:name)
+      params.require(:team).permit(:name, :parent_id)
     end
 end

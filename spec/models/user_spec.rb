@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
 
   subject { create(:user) }
-  let(:team1) { create(:team) }
-  let(:team2) { create(:team) }
+  let(:team1) { create(:team, parent: create(:organization)) }
+  let(:team2) { create(:team, parent: create(:organization)) }
 
   describe 'FactoryBot.create(:user)' do
     it 'create user' do

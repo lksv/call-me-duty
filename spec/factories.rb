@@ -70,14 +70,27 @@ FactoryBot.define do
 
   factory :user do
     sequence(:email) { |n| "name#{n}@example.com" }
+    sequence(:name)  { |n| "fake#{n} name" }
     password        'myPassword'
+    organizations    do |user|
+      [ Organization.first || FactoryBot.create(:organization) ]
+    end
+  end
+
+  factory :organization do
+    sequence(:name) { |n| "MyGigaCorp no. #{n}" }
   end
 
   factory :team do
     sequence(:name) { |n| "Team name no. #{n}" }
-    #after(:create) { team.create_calendar }
+    parent      { |o| o.parent = Organization.first || FactoryBot.create(:organization) }
   end
 
+  factory :member do
+    access_level 100
+    user
+    team
+  end
 
   ###
 

@@ -1,0 +1,11 @@
+-# frozen_string_literal: true
+- nested_route = @member.new_record? ? [@team, @member] : @member
+= simple_form_for(nested_route) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :access_level, collection: Member::AccessLevels, include_blank: false
+    = f.association :user if f.object.new_record?
+
+  .form-actions
+    = f.button :submit

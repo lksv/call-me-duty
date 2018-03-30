@@ -71,7 +71,7 @@ class EscalationPoliciesController < ApplicationController
     end
 
     def set_team
-      @team = current_user.teams.find(params[:team_id])
+      @team = current_user.teams.find_by(full_path: params[:team_id])
     end
 
     def set_targetables
