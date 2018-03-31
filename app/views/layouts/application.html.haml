@@ -28,7 +28,7 @@
         %span.navbar-toggler-icon
       #navbarSupportedContent.collapse.navbar-collapse
         %ul.navbar-nav.mr-auto
-          - team = (@team&.persisted? && @team) || current_user&.default_team
+          - team = (@team&.persisted? && @team) || current_user&.default_organization
           - if team
             %li.nav-item.active
               = link_to team_incidents_path(team), {class: 'nav-link'} do

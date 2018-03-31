@@ -15,7 +15,11 @@ class HomeController < ApplicationController
 
   def redirect_logged_user
     flash.keep
-    redirect_to(team_incidents_path(current_user&.default_team))
+    if current_user&.default_organization
+      redirect_to(team_incidents_path(current_user&.default_organization))
+    else
+      redirect_to(teams_path)
+    end
   end
 
 end

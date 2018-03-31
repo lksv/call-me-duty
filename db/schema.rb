@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180330180723) do
+ActiveRecord::Schema.define(version: 20180331212117) do
 
   create_table "calendar_events", force: :cascade do |t|
     t.integer "calendar_id"
@@ -189,6 +189,8 @@ ActiveRecord::Schema.define(version: 20180330180723) do
     t.datetime "updated_at", null: false
     t.string "phone"
     t.string "name"
+    t.integer "default_organization_id"
+    t.index ["default_organization_id"], name: "index_users_on_default_organization_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

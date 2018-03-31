@@ -47,4 +47,31 @@ RSpec.describe User, type: :model do
       expect(subject.visible_users).not_to include(other_team)
     end
   end
+
+  describe '#set_default_organization' do
+    it 'do nothing when default_organization is set' do
+      subject.default_organization = other_organization
+      subject.send(:set_default_organization)
+      expect(subject.default_organization).to eq other_organization
+    end
+
+    it 'keeps default_organization nil when user do not becomes to any organization' do
+      subject.members.destroy_all
+      subject.reload
+      subject.default_organization = nil
+      subject.send(:set_default_organization)
+      expect(subject.default_organization).to eq nil
+    end
+
+    it 'set default_organization when it is nil' do
+      subject.members.destroy_all
+      subject.reload
+      subject.default_organization = nil
+      subject.teams << team1.organization
+      subject.save!
+      subject.send(:set_default_organization)
+      expect(subject.default_organization).to eq team1.organization
+    end
+
+  end
 end
