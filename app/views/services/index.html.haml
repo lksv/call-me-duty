@@ -1,5 +1,5 @@
 .page-header
-  = link_to [:new, @team, :service], class: 'btn btn-primary' do
+  = link_to [:new, @team.becomes(Team), :service], class: 'btn btn-primary' do
     %span.glyphicon.glyphicon-plus
     New Service
   %h1
@@ -22,6 +22,6 @@
         %tr
           %td= service.name
           %td= service.team.name
-          %td= link_to 'Show', [@team, service]
-          %td= link_to 'Edit', edit_team_service_path(@team, service)
-          %td= link_to 'Destroy', [@team, service], data: { confirm: 'Are you sure?' }, method: :delete
+          %td= link_to 'Show', [@team.becomes(Team), service]
+          %td= link_to 'Edit', edit_team_service_path(@team.becomes(Team), service)
+          %td= link_to 'Destroy', [@team.becomes(Team), service], data: { confirm: 'Are you sure?' }, method: :delete

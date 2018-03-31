@@ -30,7 +30,7 @@ class EscalationPoliciesController < ApplicationController
 
     respond_to do |format|
       if @escalation_policy.save
-        format.html { redirect_to [@team, @escalation_policy], notice: 'Escalation policy was successfully created.' }
+        format.html { redirect_to [@team.becomes(Team), @escalation_policy], notice: 'Escalation policy was successfully created.' }
         format.json { render :show, status: :created, location: @escalation_policy }
       else
         format.html { render :new }
@@ -44,7 +44,7 @@ class EscalationPoliciesController < ApplicationController
   def update
     respond_to do |format|
       if @escalation_policy.update(escalation_policy_params)
-        format.html { redirect_to [@team, @escalation_policy], notice: 'Escalation policy was successfully updated.' }
+        format.html { redirect_to [@team.becomes(Team), @escalation_policy], notice: 'Escalation policy was successfully updated.' }
         format.json { render :show, status: :ok, location: @escalation_policy }
       else
         format.html { render :edit }
@@ -58,7 +58,7 @@ class EscalationPoliciesController < ApplicationController
   def destroy
     @escalation_policy.destroy
     respond_to do |format|
-      format.html { redirect_to [@team, :escalation_policies], notice: 'Escalation policy was successfully destroyed.' }
+      format.html { redirect_to [@team.becomes(Team), :escalation_policies], notice: 'Escalation policy was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

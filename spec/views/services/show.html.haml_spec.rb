@@ -14,4 +14,11 @@ RSpec.describe "services/show", type: :view do
     expect(rendered).to match(service.name)
     expect(rendered).to match(service.description)
   end
+
+  it "renders attributes for Organization" do
+    assign(:team, team.organization)
+    render
+    expect(rendered).to match(service.name)
+    expect(rendered).to match(service.description)
+  end
 end

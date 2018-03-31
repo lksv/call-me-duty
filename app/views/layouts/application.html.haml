@@ -28,22 +28,39 @@
         %span.navbar-toggler-icon
       #navbarSupportedContent.collapse.navbar-collapse
         %ul.navbar-nav.mr-auto
-          %li.nav-item.active
-            = link_to team_incidents_path(@team || current_user.default_team), {class: 'nav-link'} do
-              Incidents
-              %span.sr-only (current)
-          %li.nav-item
-            = link_to "Teams", teams_path, class: 'nav-link'
-          %li.nav-item.dropdown
-            %a#navbarDropdown.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
-              Dropdown
-            .dropdown-menu{"aria-labelledby" => "navbarDropdown"}
-              %a.dropdown-item{:href => "#"} Action
-              %a.dropdown-item{:href => "#"} Another action
-              .dropdown-divider
-              %a.dropdown-item{:href => "#"} Something else here
-          %li.nav-item
-            %a.nav-link.disabled{:href => "#"} Disabled
+          - team = (@team&.persisted? && @team) || current_user&.default_team
+          - if team
+            %li.nav-item.active
+              = link_to team_incidents_path(team), {class: 'nav-link'} do
+                Incidents
+                %span.sr-only (current)
+            %li.nav-item.active
+              = link_to team_calendar_path(team), class: 'nav-link' do
+                Calendar
+            %li.nav-item.active
+              = link_to team_escalation_policies_path(team), {class: 'nav-link'} do
+                Escalation Policies
+            %li.nav-item.active
+              = link_to team_services_path(team), {class: 'nav-link'} do
+                Services
+            %li.nav-item.active
+              = link_to teams_path, class: 'nav-link' do
+                Teams
+          - if current_user && current_user.organizations.count > 1
+            %li.nav-item.dropdown
+              %a.nav-link.dropdown-toggle#navbarDropdown{href:"#", role:"button", data: {toggle: "dropdown"}}
+                Organizations
+              .dropdown-menu
+                %a.dropdown-item{href:"#"}Action
+                .dropdown-divider
+                %a.dropdown-item{href:"#"}Another action
+        %ul.navbar-nav.my-2.my-lg-0
+          %li.nav-item.acitve
+            - if user_signed_in?
+              = link_to 'Sign out', destroy_user_session_path, :method=>'delete', class: 'nav-link'
+            - else
+              = link_to 'Sign in', new_user_session_path, class: 'nav-link'
+
 
     .container
       - flash.each do |name, msg|

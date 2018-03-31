@@ -17,4 +17,13 @@ RSpec.describe "escalation_policies/new", type: :view do
       assert_select "textarea[name=?]", "escalation_policy[description]"
     end
   end
+
+  it "renders new escalation_policy form under organization" do
+    assign(:team, team.organization)
+    render
+    assert_select "form[action=?][method=?]", team_escalation_policies_path(team.organization), "post" do
+      assert_select "input[name=?]", "escalation_policy[name]"
+      assert_select "textarea[name=?]", "escalation_policy[description]"
+    end
+  end
 end

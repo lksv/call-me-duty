@@ -3,8 +3,13 @@ require 'rails_helper'
 RSpec.describe TeamsController, type: :controller do
 
   let(:team) { create(:team) }
+  let(:user)    { create(:user, teams: [team]) }
   let(:valid_attributes)    { attributes_for(:team, parent_id: team.id) }
   let(:invalid_attributes)  { {name:' '} }
+
+  before(:each) do
+    sign_in user
+  end
 
   describe "GET #index" do
     it "returns a success response" do

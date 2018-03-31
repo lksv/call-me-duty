@@ -19,4 +19,16 @@ RSpec.describe "escalation_policies/show", type: :view do
     expect(rendered).to match(escalation_policy.description)
     expect(rendered).to match(escalation_policy.team_name)
   end
+
+  it "renders attributes in <p>" do
+    assign(:team, team.organization)
+    render
+    expect(rendered).to match('Name')
+    expect(rendered).to match('Description')
+    expect(rendered).to match('Team')
+
+    expect(rendered).to match(escalation_policy.name)
+    expect(rendered).to match(escalation_policy.description)
+    expect(rendered).to match(escalation_policy.team_name)
+  end
 end

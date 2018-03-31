@@ -1,5 +1,5 @@
 -# frozen_string_literal: true
-= simple_form_for([@team, @escalation_policy]) do |f|
+= simple_form_for([@team.becomes(Team), @escalation_policy]) do |f|
   = f.error_notification
 
   .form-inputs

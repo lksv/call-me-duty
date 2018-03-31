@@ -17,4 +17,11 @@ RSpec.describe "incidents/new", type: :view do
     assert_select "form[action=?][method=?]", team_incidents_path(team), "post" do
     end
   end
+
+  it "renders new incident form for organizations incident" do
+    assign(:team, team.organization)
+    render
+    assert_select "form[action=?][method=?]", team_incidents_path(team.organization), "post" do
+    end
+  end
 end

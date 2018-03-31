@@ -1,5 +1,5 @@
 .page-header
-  = link_to [@team, @escalation_policy], class: 'btn btn-default' do
+  = link_to [@team.becomes(Team), @escalation_policy], class: 'btn btn-default' do
     %span.glyphicon.glyphicon-list-alt
     Back
   %h1 New escalation_policy

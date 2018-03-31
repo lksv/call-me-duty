@@ -1,5 +1,5 @@
 -# frozen_string_literal: true
-- nested_route = @incident.new_record? ? [@team, @incident] : @incident
+- nested_route = @incident.new_record? ? [@team.becomes(Team), @incident] : @incident
 = simple_form_for(nested_route) do |f|
   = f.error_notification
 

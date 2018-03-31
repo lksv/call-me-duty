@@ -1,8 +1,9 @@
+- team = @team.becomes(Team)
 .page-header
-  = link_to [@team, :services], class: 'btn btn-default' do
+  = link_to [team, :services], class: 'btn btn-default' do
     %span.glyphicon.glyphicon-list-alt
     Back
-  = link_to [@team, @service], class: 'btn btn-primary' do
+  = link_to [team, @service], class: 'btn btn-primary' do
     %span.glyphicon.glyphicon-info-sign
     Show
   %h1 Editing service

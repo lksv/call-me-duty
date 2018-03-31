@@ -1,8 +1,9 @@
+- team = @team.becomes(Team)
 .page-header
-  = link_to [@team, :escalation_policies], class: 'btn btn-default' do
+  = link_to [team, :escalation_policies], class: 'btn btn-default' do
     %span.glyphicon.glyphicon-list-alt
     Back
-  = link_to [@team, @escalation_policy], class: 'btn btn-primary' do
+  = link_to [:edit, team, @escalation_policy], class: 'btn btn-primary' do
     %span.glyphicon.glyphicon-pencil
     Edit
   %h1 Show escalation_policy

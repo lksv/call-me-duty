@@ -16,4 +16,12 @@ RSpec.describe "services/index", type: :view do
     assert_select 'tr>td', text: service1.name, :count => 1
     assert_select 'tr>td', text: service2.name, :count => 1
   end
+
+  it "renders a list of services" do
+    assign(:team, team.organization)
+    render
+    assert_select 'tr>td', text: 'Show', :count => 2
+    assert_select 'tr>td', text: service1.name, :count => 1
+    assert_select 'tr>td', text: service2.name, :count => 1
+  end
 end
