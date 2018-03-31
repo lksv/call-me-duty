@@ -1,10 +1,11 @@
 class IncidentsController < ApplicationController
+  before_action :set_team, only: [:index, :new, :create]
   before_action :set_incident, only: [:show, :edit, :update, :destroy]
 
   # GET /incidents
   # GET /incidents.json
   def index
-    @incidents = Incident.all
+    @incidents = @team.incidents.all
   end
 
   # GET /incidents/1
@@ -24,7 +25,7 @@ class IncidentsController < ApplicationController
   # POST /incidents
   # POST /incidents.json
   def create
-    @incident = Incident.new(incident_params)
+    @incident = @team.incidents.new(incident_params)
 
     respond_to do |format|
       if @incident.save
@@ -56,7 +57,7 @@ class IncidentsController < ApplicationController
   def destroy
     @incident.destroy
     respond_to do |format|
-      format.html { redirect_to incidents_url, notice: 'Incident was successfully destroyed.' }
+      format.html { redirect_to team_incidents_path(@team), notice: 'Incident was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -65,6 +66,11 @@ class IncidentsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_incident
       @incident = Incident.find(params[:id])
+      @team = @incident.team
+    end
+
+    def set_team
+      @team = current_user.teams.find_by!(full_path: params[:full_path] || params[:team_id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

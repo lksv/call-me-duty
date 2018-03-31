@@ -21,6 +21,7 @@ module CallMePager
     config.eager_load_paths.push(*%W[
                                  #{config.root}/app/models/integrations
                                  #{config.root}/app/models/delivery_gateways
+                                 #{config.root}/lib
     ])
     config.autoload_paths = config.eager_load_paths.dup
 

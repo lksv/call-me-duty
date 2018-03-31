@@ -8,6 +8,7 @@ RSpec.describe "integrations/show", type: :view do
   before(:each) do
     @integration = assign(:integration, integration)
     assign(:service, service)
+    assign(:team, team)
   end
 
   it "renders attributes in <p>" do

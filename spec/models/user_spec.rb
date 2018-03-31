@@ -6,6 +6,9 @@ RSpec.describe User, type: :model do
   let(:team1) { create(:team, parent: create(:organization)) }
   let(:team2) { create(:team, parent: create(:organization)) }
 
+  let(:other_organization)  { create(:organization) }
+  let(:other_team)           { create(:team, parent: other_organization) }
+
   describe 'FactoryBot.create(:user)' do
     it 'create user' do
       subject
@@ -38,32 +41,10 @@ RSpec.describe User, type: :model do
       )
     end
 
-    it 'sould not return user in distict teams' do
-      team1_user
-      team2_user
-      expect(subject.visible_users.size).to eq 0
-    end
-  end
-
-  describe '#visible_delivery_gateways' do
-    let(:team1_webhook) { create(:webhook_gateway, team: team1) }
-    let(:team2_webhook) { create(:webhook_gateway, team: team2) }
-
-    it 'returns delivery_gateways in users teams' do
-      team1_webhook
-      team2_webhook
-      subject.teams << team1
-      subject.teams << team2
-      expect(subject.visible_delivery_gateways.size).to eq 2
-      expect(subject.visible_delivery_gateways.all.to_a).to(
-        include(team1_webhook, team2_webhook)
-      )
-    end
-
-    it 'should not return delivery_gateway beloging to others team' do
-      team1_webhook
-      team2_webhook
-      expect(subject.visible_delivery_gateways.size).to eq 0
+    it 'sould not return user in other organizations' do
+      other_organization
+      expect(subject.visible_users).not_to include(other_organization)
+      expect(subject.visible_users).not_to include(other_team)
     end
   end
 end

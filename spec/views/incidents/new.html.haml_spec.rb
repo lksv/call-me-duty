@@ -6,6 +6,7 @@ RSpec.describe "incidents/new", type: :view do
 
   before(:each) do
     assign(:incident, Incident.new())
+    assign(:team, team)
 
     sign_in user
   end
@@ -13,7 +14,7 @@ RSpec.describe "incidents/new", type: :view do
   it "renders new incident form" do
     render
 
-    assert_select "form[action=?][method=?]", incidents_path, "post" do
+    assert_select "form[action=?][method=?]", team_incidents_path(team), "post" do
     end
   end
 end

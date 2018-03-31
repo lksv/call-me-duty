@@ -35,7 +35,8 @@ class User < ApplicationRecord
 
   has_many :members
   has_many :teams, through: :members
-  has_many :organizations, -> { where(parent_id: nil) }, through: :members, source: 'team'
+  has_many :organizations, -> { where(parent_id: nil, teams: { type: 'Organization'}) }, through: :members, source: 'team'
+  has_many :organization_users, through: :organizations, source: 'users'
 
   # has_and_belongs_to_many :teams
 
@@ -44,14 +45,10 @@ class User < ApplicationRecord
   end
 
   def visible_users
-    all_team_ids = organizations.each do |slug|
-      Team.where('full_path like ?', "#{slug}/%").pluck(:id)
-    end.flatten.uniq
-
-    User.joins(:members).where(members: { team_id: all_team_ids })
+    organization_users.distinct
   end
 
-  def visible_delivery_gateways
-    DeliveryGateway.where(team_id: teams).distinct
+  def default_team
+    organizations.first
   end
 end

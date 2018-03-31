@@ -10,7 +10,7 @@ FactoryBot.define do
 
   factory :delivery_gateway do
     sequence(:name) { |n| "My Outbound Integration no. #{n}" }
-    type 'EmailGateway'
+    type 'WebhookGateway'
     team
     data "{}"
   end
@@ -75,10 +75,22 @@ FactoryBot.define do
     organizations    do |user|
       [ Organization.first || FactoryBot.create(:organization) ]
     end
+    transient do
+      teams []
+    end
+
+    after(:create) do |user, evaluator|
+      evaluator.teams.each do |t|
+        o = t.organization
+        o.users << user unless o.users.include?(user)
+        user.teams << t
+      end
+    end
   end
 
   factory :organization do
     sequence(:name) { |n| "MyGigaCorp no. #{n}" }
+    type    'Organization'
   end
 
   factory :team do
@@ -88,8 +100,8 @@ FactoryBot.define do
 
   factory :member do
     access_level 100
-    user
     team
+    user
   end
 
   ###

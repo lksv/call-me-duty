@@ -1,5 +1,5 @@
 .page-header
-  = link_to calendars_path, class: 'btn btn-default' do
+  = link_to team_calendars_path(@team), class: 'btn btn-default' do
     %span.glyphicon.glyphicon-list-alt
     Back
   = link_to edit_calendar_path(@calendar), class: 'btn btn-primary' do

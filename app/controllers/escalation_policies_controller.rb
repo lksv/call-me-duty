@@ -30,7 +30,7 @@ class EscalationPoliciesController < ApplicationController
 
     respond_to do |format|
       if @escalation_policy.save
-        format.html { redirect_to @escalation_policy, notice: 'Escalation policy was successfully created.' }
+        format.html { redirect_to [@team, @escalation_policy], notice: 'Escalation policy was successfully created.' }
         format.json { render :show, status: :created, location: @escalation_policy }
       else
         format.html { render :new }
@@ -44,7 +44,7 @@ class EscalationPoliciesController < ApplicationController
   def update
     respond_to do |format|
       if @escalation_policy.update(escalation_policy_params)
-        format.html { redirect_to @escalation_policy, notice: 'Escalation policy was successfully updated.' }
+        format.html { redirect_to [@team, @escalation_policy], notice: 'Escalation policy was successfully updated.' }
         format.json { render :show, status: :ok, location: @escalation_policy }
       else
         format.html { render :edit }
@@ -71,13 +71,13 @@ class EscalationPoliciesController < ApplicationController
     end
 
     def set_team
-      @team = current_user.teams.find_by(full_path: params[:team_id])
+      @team = current_user.teams.find_by(full_path: params[:full_path] || params[:team_id])
     end
 
     def set_targetables
       @targetables =
         current_user.visible_users.map { |u| [u.name, [u.id, 'User'].join(',')] } +
-        current_user.visible_delivery_gateways.map { |u| [u.name, [u.id, u.type].join(',')] }
+        @team.visible_delivery_gateways.map { |u| [u.name, [u.id, u.type].join(',')] }
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

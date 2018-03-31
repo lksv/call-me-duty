@@ -1,5 +1,6 @@
 -# frozen_string_literal: true
-= simple_form_for(@calendar) do |f|
+- nested_route = @calendar.new_record? ? [@team, @calendar] : @calendar
+= simple_form_for(nested_route) do |f|
   = f.error_notification
 
   .form-inputs

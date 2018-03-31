@@ -4,11 +4,11 @@ RSpec.describe IncidentsController, type: :routing do
   describe "routing" do
 
     it "routes to #index" do
-      expect(:get => "/incidents").to route_to("incidents#index")
+      expect(:get => "/teams/2/incidents").to route_to("incidents#index", team_id: '2')
     end
 
     it "routes to #new" do
-      expect(:get => "/incidents/new").to route_to("incidents#new")
+      expect(:get => "/teams/2/incidents/new").to route_to("incidents#new", team_id: '2')
     end
 
     it "routes to #show" do
@@ -20,7 +20,7 @@ RSpec.describe IncidentsController, type: :routing do
     end
 
     it "routes to #create" do
-      expect(:post => "/incidents").to route_to("incidents#create")
+      expect(:post => "/teams/2/incidents").to route_to("incidents#create", team_id: '2')
     end
 
     it "routes to #update via PUT" do

@@ -1,10 +1,11 @@
 class CalendarsController < ApplicationController
+  before_action :set_team, only: [:index, :new, :create]
   before_action :set_calendar, only: [:show, :edit, :update, :destroy]
 
   # GET /calendars
   # GET /calendars.json
   def index
-    @calendars = Calendar.all
+    @calendars = Calendar.includes(:team).all
   end
 
   # GET /calendars/1
@@ -56,7 +57,7 @@ class CalendarsController < ApplicationController
   def destroy
     @calendar.destroy
     respond_to do |format|
-      format.html { redirect_to calendars_url, notice: 'Calendar was successfully destroyed.' }
+      format.html { redirect_to team_calendars_url(@team), notice: 'Calendar was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -65,7 +66,12 @@ class CalendarsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_calendar
       @calendar = Calendar.find(params[:id])
+      @team = @calendar.team
       @calendar_events = @calendar.calendar_events
+    end
+
+    def set_team
+      @team = current_user.teams.find_by!(full_path: params[:full_path] || params[:team_id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

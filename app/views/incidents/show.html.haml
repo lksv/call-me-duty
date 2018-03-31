@@ -1,5 +1,5 @@
 .page-header
-  = link_to incidents_path, class: 'btn btn-default' do
+  = link_to team_incidents_path(@team), class: 'btn btn-default' do
     %span.glyphicon.glyphicon-list-alt
     Back
   = link_to edit_incident_path(@incident), class: 'btn btn-primary' do

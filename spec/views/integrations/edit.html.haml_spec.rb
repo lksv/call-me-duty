@@ -8,12 +8,13 @@ RSpec.describe "integrations/edit", type: :view do
   before(:each) do
     @integration = assign(:integration, integration)
     assign(:service, service)
+    assign(:team, team)
   end
 
   it "renders the edit integration form" do
     render
 
-    assert_select "form[action=?][method=?]", integration_path(@integration), "post" do
+    assert_select "form[action=?][method=?]", team_integration_path(team, @integration), "post" do
       assert_select "input[name=?]", "integration[name]"
       assert_select "select[name=?]", "integration[type]"
       assert_select "select[name=?]", "integration[service_id]"

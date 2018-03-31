@@ -9,6 +9,7 @@ RSpec.describe "integrations/index", type: :view do
   before(:each) do
     assign(:integrations, [integration1, integration2])
     assign(:service, service)
+    assign(:team, team)
   end
 
   it "renders a list of integrations" do

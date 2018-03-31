@@ -12,7 +12,7 @@ RSpec.describe "calendars/new", type: :view do
   it "renders new calendar form" do
     render
 
-    assert_select "form[action=?][method=?]", calendars_path, "post" do
+    assert_select "form[action=?][method=?]", team_calendars_path(team), "post" do
       assert_select "select[name=?]", "calendar[team_id]"
     end
   end

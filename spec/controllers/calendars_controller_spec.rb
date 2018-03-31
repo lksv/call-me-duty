@@ -16,7 +16,7 @@ RSpec.describe CalendarsController, type: :controller do
   describe "GET #index" do
     it "returns a success response" do
       calendar
-      get :index, params: {}
+      get :index, params: {team_id: team.full_path, }
       expect(response).to be_success
     end
   end
@@ -24,14 +24,14 @@ RSpec.describe CalendarsController, type: :controller do
   describe "GET #show" do
     it "returns a success response" do
       calendar
-      get :show, params: {id: calendar.to_param}
+      get :show, params: {team_id: team.full_path, id: calendar.to_param}
       expect(response).to be_success
     end
   end
 
   describe "GET #new" do
     it "returns a success response" do
-      get :new, params: {}
+      get :new, params: {team_id: team.full_path, }
       expect(response).to be_success
     end
   end
@@ -39,7 +39,7 @@ RSpec.describe CalendarsController, type: :controller do
   describe "GET #edit" do
     it "returns a success response" do
       calendar
-      get :edit, params: {id: calendar.to_param}
+      get :edit, params: {team_id: team.full_path, id: calendar.to_param}
       expect(response).to be_success
     end
   end
@@ -48,19 +48,19 @@ RSpec.describe CalendarsController, type: :controller do
     context "with valid params" do
       it "creates a new Calendar" do
         expect {
-          post :create, params: {calendar: valid_attributes}
+          post :create, params: {team_id: team.full_path, calendar: valid_attributes}
         }.to change(Calendar, :count).by(1)
       end
 
       it "redirects to the created calendar" do
-        post :create, params: {calendar: valid_attributes}
+        post :create, params: {team_id: team.full_path, calendar: valid_attributes}
         expect(response).to redirect_to(Calendar.last)
       end
     end
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'new' template)" do
-        post :create, params: {calendar: invalid_attributes}
+        post :create, params: {team_id: team.full_path, calendar: invalid_attributes}
         expect(response).to be_success
       end
     end
@@ -75,14 +75,14 @@ RSpec.describe CalendarsController, type: :controller do
 
       it "updates the requested calendar" do
         calendar
-        put :update, params: {id: calendar.to_param, calendar: new_attributes}
+        put :update, params: {team_id: team.full_path, id: calendar.to_param, calendar: new_attributes}
         calendar.reload
         expect(calendar.team).to eq other_team
       end
 
       it "redirects to the calendar" do
         calendar
-        put :update, params: {id: calendar.to_param, calendar: valid_attributes}
+        put :update, params: {team_id: team.full_path, id: calendar.to_param, calendar: valid_attributes}
         expect(response).to redirect_to(calendar)
       end
     end
@@ -91,7 +91,7 @@ RSpec.describe CalendarsController, type: :controller do
       it "returns a success response (i.e. to display the 'edit' template)" do
         skip('there is nothing what could be changed for now')
         calendar
-        put :update, params: {id: calendar.to_param, calendar: invalid_attributes}
+        put :update, params: {team_id: team.full_path, id: calendar.to_param, calendar: invalid_attributes}
         expect(response).to be_success
       end
     end
@@ -101,14 +101,14 @@ RSpec.describe CalendarsController, type: :controller do
     it "destroys the requested calendar" do
       calendar
       expect {
-        delete :destroy, params: {id: calendar.to_param}
+        delete :destroy, params: {team_id: team.full_path, id: calendar.to_param}
       }.to change(Calendar, :count).by(-1)
     end
 
     it "redirects to the calendars list" do
       calendar
-      delete :destroy, params: {id: calendar.to_param}
-      expect(response).to redirect_to(calendars_url)
+      delete :destroy, params: {team_id: team.full_path, id: calendar.to_param}
+      expect(response).to redirect_to([team, :calendars])
     end
   end
 end

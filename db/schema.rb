@@ -151,6 +151,7 @@ ActiveRecord::Schema.define(version: 20180330180723) do
 
   create_table "teams", force: :cascade do |t|
     t.string "name", default: "", null: false
+    t.string "type"
     t.text "description"
     t.integer "parent_id"
     t.integer "owner_id"
@@ -163,6 +164,7 @@ ActiveRecord::Schema.define(version: 20180330180723) do
     t.index ["parent_id", "name"], name: "index_teams_on_parent_id_and_name", unique: true
     t.index ["parent_id", "slug"], name: "index_teams_on_parent_id_and_slug", unique: true
     t.index ["parent_id"], name: "index_teams_on_parent_id"
+    t.index ["type"], name: "index_teams_on_type"
   end
 
   create_table "teams_users", id: false, force: :cascade do |t|

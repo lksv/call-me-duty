@@ -16,7 +16,7 @@
     %tbody
       - @teams.each do |team|
         %tr
-          %td= team.name
-          %td= link_to 'Show', team
+          %td= show_team_path(team, teams_cache: @teams)
+          %td= link_to 'Show', team.becomes(Team)
           %td= link_to 'Edit', edit_team_path(team)
-          %td= link_to 'Destroy', team, data: { confirm: 'Are you sure?' }, method: :delete
+          %td= link_to 'Destroy', team.becomes(Team), data: { confirm: 'Are you sure?' }, method: :delete

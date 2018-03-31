@@ -1,6 +1,5 @@
 -# frozen_string_literal: true
-- nested_route = @escalation_policy.new_record? ? [@team, @escalation_policy] : @escalation_policy
-= simple_form_for(nested_route) do |f|
+= simple_form_for([@team, @escalation_policy]) do |f|
   = f.error_notification
 
   .form-inputs

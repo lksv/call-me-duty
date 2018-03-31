@@ -11,5 +11,25 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe TeamsHelper, type: :helper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  let(:team) { create(:team) }
+
+  describe '#show_team_path' do
+    it 'contains teams name' do
+      expect(helper.show_team_path(team, teams_cache: [team])).to include(team.name)
+    end
+
+    it 'contains link to teams incidents' do
+      expect(helper.show_team_path(team, teams_cache: [team])).to include(team_incidents_path(team))
+    end
+
+    it 'contains parent name' do
+      expect(helper.show_team_path(team, teams_cache: [team, team.parent])).to include(team.parent.name)
+    end
+
+    it 'contains link to parent teams incidents' do
+      expect(
+        helper.show_team_path(team, teams_cache: [team, team.parent])
+      ).to include(team_incidents_path(team.parent))
+    end
+  end
 end

@@ -10,6 +10,7 @@ RSpec.describe "incidents/show", type: :view do
 
   before(:each) do
     @incident = assign(:incident, incident)
+    assign(:team, team)
   end
 
   context 'when no service, integration and escalation_policy filled' do

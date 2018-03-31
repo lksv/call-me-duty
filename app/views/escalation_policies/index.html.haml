@@ -21,6 +21,6 @@
           %td= escalation_policy.name
           %td= escalation_policy.description
           %td= escalation_policy.team.name
-          %td= link_to 'Show', escalation_policy
-          %td= link_to 'Edit', edit_escalation_policy_path(escalation_policy)
-          %td= link_to 'Destroy', escalation_policy, data: { confirm: 'Are you sure?' }, method: :delete
+          %td= link_to 'Show', [@team, escalation_policy]
+          %td= link_to 'Edit', edit_team_escalation_policy_path(@team, escalation_policy)
+          %td= link_to 'Destroy', team_escalation_policy_path(@team, escalation_policy), data: { confirm: 'Are you sure?' }, method: :delete

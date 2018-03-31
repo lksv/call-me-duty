@@ -4,6 +4,7 @@
 #
 #  id          :integer          not null, primary key
 #  name        :string           default(""), not null
+#  type        :string
 #  description :text
 #  parent_id   :integer
 #  owner_id    :integer
@@ -19,6 +20,7 @@
 #  index_teams_on_parent_id           (parent_id)
 #  index_teams_on_parent_id_and_name  (parent_id,name) UNIQUE
 #  index_teams_on_parent_id_and_slug  (parent_id,slug) UNIQUE
+#  index_teams_on_type                (type)
 #
 
 class Organization < Team
@@ -29,6 +31,6 @@ class Organization < Team
   private
 
   def full_path_is_slug
-    errors.add('must equal to slug') unless full_path == slug
+    errors.add(:full_path, 'must equal to slug') unless full_path == slug
   end
 end

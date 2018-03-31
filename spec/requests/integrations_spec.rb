@@ -12,7 +12,7 @@ RSpec.describe "Integrations", type: :request do
 
   describe "GET /integrations" do
     it "works! (now write some real specs)" do
-      get service_integrations_path(service)
+      get team_service_integrations_path(team, service)
       expect(response).to have_http_status(200)
     end
   end

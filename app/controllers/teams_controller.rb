@@ -71,7 +71,7 @@ class TeamsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_team
-      @team = Team.find_by(full_path: params[:id])
+      @team = Team.find_by(full_path: params[:full_path] || params[:id])
     end
 
     # TODO I cannot set any parent_id, but only of organization the

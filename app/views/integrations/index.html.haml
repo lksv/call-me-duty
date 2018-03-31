@@ -1,5 +1,5 @@
 .page-header
-  = link_to [:new, @service, :integration], class: 'btn btn-primary' do
+  = link_to new_team_service_integration_path(@team, @service), class: 'btn btn-primary' do
     %span.glyphicon.glyphicon-plus
     New Integration
   %h1
@@ -26,6 +26,6 @@
           %td= integration.key
           %td= integration.type
           %td= integration.service_name
-          %td= link_to 'Show', integration.becomes(Integration)
-          %td= link_to 'Edit', edit_integration_path(integration)
-          %td= link_to 'Destroy', integration.becomes(Integration), data: { confirm: 'Are you sure?' }, method: :delete
+          %td= link_to 'Show', [@team, integration.becomes(Integration)]
+          %td= link_to 'Edit', [@team, integration]
+          %td= link_to 'Destroy', [@team, integration.becomes(Integration)], data: { confirm: 'Are you sure?' }, method: :delete

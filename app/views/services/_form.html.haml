@@ -1,6 +1,5 @@
 -# frozen_string_literal: true
-- nested_route = @service.new_record? ? [@team, @service] : @service
-= simple_form_for(nested_route) do |f|
+= simple_form_for([@team, @service]) do |f|
   = f.error_notification
 
   .form-inputs

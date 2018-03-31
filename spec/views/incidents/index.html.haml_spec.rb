@@ -8,6 +8,7 @@ RSpec.describe "incidents/index", type: :view do
 
   before(:each) do
     assign(:incidents, [incident1, incident2])
+    assign(:team, team)
     allow(controller).to receive(:current_user).and_return(user)
     allow(view).to receive_messages(current_user: user)
   end

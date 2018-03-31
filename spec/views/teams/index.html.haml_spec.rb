@@ -10,8 +10,8 @@ RSpec.describe "teams/index", type: :view do
 
   it "renders a list of teams" do
     render
-    assert_select 'tr>td', text: team1.name, :count => 1
-    assert_select 'tr>td', text: team2.name, :count => 1
+    expect(rendered).to match(team1.name)
+    expect(rendered).to match(team2.name)
     assert_select 'tr>td', text: 'Show', :count => 2
   end
 end

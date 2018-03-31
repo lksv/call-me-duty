@@ -12,7 +12,7 @@ RSpec.describe "services/edit", type: :view do
   it "renders the edit service form" do
     render
 
-    assert_select "form[action=?][method=?]", service_path(@service), "post" do
+    assert_select "form[action=?][method=?]", team_service_path(team, @service), "post" do
       assert_select "input[name=?]", "service[name]"
       assert_select "textarea[name=?]", "service[description]"
     end

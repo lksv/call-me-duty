@@ -7,11 +7,11 @@ RSpec.describe ServicesController, type: :controller do
   let(:service) { create(:service, team: team) }
 
   let(:valid_attributes) {
-    attributes_for(:service).merge(team_id: team.to_param)
+    attributes_for(:service).merge(full_path: team.to_param)
   }
 
   let(:invalid_attributes) {
-    {team_id: team.to_param, name: ''}
+    {full_path: team.to_param, name: ''}
   }
 
   before(:each) do
@@ -21,7 +21,7 @@ RSpec.describe ServicesController, type: :controller do
   describe "GET #index" do
     it "returns a success response" do
       service
-      get :index, params: {team_id: team.to_param}
+      get :index, params: {full_path: team.to_param}
       expect(response).to be_success
     end
   end
@@ -29,14 +29,14 @@ RSpec.describe ServicesController, type: :controller do
   describe "GET #show" do
     it "returns a success response" do
       service
-      get :show, params: {id: service.to_param}
+      get :show, params: {id: service.to_param, full_path: team.to_param}
       expect(response).to be_success
     end
   end
 
   describe "GET #new" do
     it "returns a success response" do
-      get :new, params: {team_id: team.to_param}
+      get :new, params: {full_path: team.to_param}
       expect(response).to be_success
     end
   end
@@ -44,7 +44,7 @@ RSpec.describe ServicesController, type: :controller do
   describe "GET #edit" do
     it "returns a success response" do
       service
-      get :edit, params: {id: service.to_param}
+      get :edit, params: {id: service.to_param, full_path: team.to_param}
       expect(response).to be_success
     end
   end
@@ -53,19 +53,19 @@ RSpec.describe ServicesController, type: :controller do
     context "with valid params" do
       it "creates a new Service" do
         expect {
-          post :create, params: {team_id: team.to_param, service: valid_attributes}
+          post :create, params: {full_path: team.to_param, service: valid_attributes}
         }.to change(Service, :count).by(1)
       end
 
       it "redirects to the created service" do
-        post :create, params: {team_id: team.to_param, service: valid_attributes}
-        expect(response).to redirect_to(Service.last)
+        post :create, params: {full_path: team.to_param, service: valid_attributes}
+        expect(response).to redirect_to(team_service_path(team, Service.last))
       end
     end
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'new' template)" do
-        post :create, params: {team_id: team.to_param, service: invalid_attributes}
+        post :create, params: {full_path: team.to_param, service: invalid_attributes}
         expect(response).to be_success
       end
     end
@@ -79,22 +79,22 @@ RSpec.describe ServicesController, type: :controller do
 
       it "updates the requested service" do
         service
-        put :update, params: {id: service.to_param, service: new_attributes}
+        put :update, params: {id: service.to_param, service: new_attributes, full_path: team.to_param}
         service.reload
         expect(service.name).to eq 'new name'
       end
 
       it "redirects to the service" do
         service
-        put :update, params: {id: service.to_param, service: valid_attributes}
-        expect(response).to redirect_to(service)
+        put :update, params: {id: service.to_param, service: valid_attributes, full_path: team.to_param}
+        expect(response).to redirect_to(team_service_path(team, service))
       end
     end
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'edit' template)" do
         service
-        put :update, params: {id: service.to_param, service: invalid_attributes}
+        put :update, params: {id: service.to_param, service: invalid_attributes, full_path: team.to_param}
         expect(response).to be_success
       end
     end
@@ -104,13 +104,13 @@ RSpec.describe ServicesController, type: :controller do
     it "destroys the requested service" do
       service
       expect {
-        delete :destroy, params: {id: service.to_param}
+        delete :destroy, params: {id: service.to_param, full_path: team.to_param}
       }.to change(Service, :count).by(-1)
     end
 
     it "redirects to the services list" do
       service
-      delete :destroy, params: {id: service.to_param}
+      delete :destroy, params: {id: service.to_param, full_path: team.full_path}
       expect(response).to redirect_to([team, :services])
     end
   end

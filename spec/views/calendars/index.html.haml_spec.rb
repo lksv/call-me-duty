@@ -7,6 +7,7 @@ RSpec.describe "calendars/index", type: :view do
 
   before(:each) do
     assign(:calendars, [calendar1, calendar2])
+    assign(:team, team)
   end
 
   it "renders a list of calendars" do

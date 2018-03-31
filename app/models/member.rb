@@ -35,7 +35,11 @@ class Member < ApplicationRecord
 
   validates :access_level, presence: true
   validates :user, uniqueness: { scope: :team }
+  validate :user_in_organization
   # validates :access_level, inclusion: { in: [0, 10,30,60,100] }
+
+  before_destroy { throw :abort if user_not_used_in_teams }
+  validate :user_not_used_in_teams, on: :destroy
 
   attribute :access_level, default: 0
 
@@ -43,5 +47,20 @@ class Member < ApplicationRecord
 
   def access_level_symbol
     AccessLevelsBySymbol[access_level]
+  end
+
+  private
+
+  def user_in_organization
+    return unless team&.parent
+    errors.add(:user, 'is not member of organization') unless user&.organization_users&.include?(user)
+  end
+
+  def user_not_used_in_teams
+    return unless Organization === team
+    unless !Member.where(team_id: team.descendants, user_id: user).exists?
+      errors.add(:user, 'is part of Teams in Organization')
+      throw :abort
+    end
   end
 end

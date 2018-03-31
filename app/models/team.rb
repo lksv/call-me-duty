@@ -4,6 +4,7 @@
 #
 #  id          :integer          not null, primary key
 #  name        :string           default(""), not null
+#  type        :string
 #  description :text
 #  parent_id   :integer
 #  owner_id    :integer
@@ -19,6 +20,7 @@
 #  index_teams_on_parent_id           (parent_id)
 #  index_teams_on_parent_id_and_name  (parent_id,name) UNIQUE
 #  index_teams_on_parent_id_and_slug  (parent_id,slug) UNIQUE
+#  index_teams_on_type                (type)
 #
 
 class Team < ApplicationRecord
@@ -63,6 +65,36 @@ class Team < ApplicationRecord
   #
   def organization?
     parent_id.nil?
+  end
+
+  def slugs
+    @slugs ||= full_path.split('/')
+  end
+
+  def organization
+    return self unless parent
+
+    return parent if slugs.size == 1
+    Organization.find_by(slug: slugs.first)
+  end
+
+  def ancestor_paths
+    slugs
+      .map.with_index { |obj,idx| slugs[0,idx+1] }
+      .map { |t| t.join('/') }
+  end
+
+  def ancestors
+    Team.where(full_path: ancestor_paths)
+  end
+
+  def descendants
+    teams = Team.arel_table
+    Team.where(teams[:full_path].matches("#{full_path}/%"))
+  end
+
+  def visible_delivery_gateways
+    DeliveryGateway.where(team_id: ancestors)
   end
 
   def to_param

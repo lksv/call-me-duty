@@ -29,7 +29,7 @@ class IntegrationsController < ApplicationController
 
     respond_to do |format|
       if @integration.save
-        format.html { redirect_to integration_path(@integration), notice: 'Integration was successfully created.' }
+        format.html { redirect_to team_integration_path(@integration.team, @integration), notice: 'Integration was successfully created.' }
         format.json { render :show, status: :created, location: @integration }
       else
         format.html { render :new }
@@ -43,7 +43,7 @@ class IntegrationsController < ApplicationController
   def update
     respond_to do |format|
       if @integration.update(integration_params)
-        format.html { redirect_to integration_path(@integration), notice: 'Integration was successfully updated.' }
+        format.html { redirect_to team_integration_path(@team, @integration), notice: 'Integration was successfully updated.' }
         format.json { render :show, status: :ok, location: @integration }
       else
         format.html { render :edit }
@@ -57,7 +57,7 @@ class IntegrationsController < ApplicationController
   def destroy
     @integration.destroy
     respond_to do |format|
-      format.html { redirect_to [@service, :integrations], notice: 'Integration was successfully destroyed.' }
+      format.html { redirect_to team_service_integrations_path(@team, @service), notice: 'Integration was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -72,6 +72,7 @@ class IntegrationsController < ApplicationController
 
     def set_service
       @service = current_user.services.find(params[:service_id])
+      @team = @service.team
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

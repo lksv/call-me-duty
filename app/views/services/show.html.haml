@@ -2,7 +2,7 @@
   = link_to [@team, :services], class: 'btn btn-default' do
     %span.glyphicon.glyphicon-list-alt
     Back
-  = link_to edit_service_path(@service), class: 'btn btn-primary' do
+  = link_to edit_team_service_path(@team, @service), class: 'btn btn-primary' do
     %span.glyphicon.glyphicon-pencil
     Edit
   %h1 Show service

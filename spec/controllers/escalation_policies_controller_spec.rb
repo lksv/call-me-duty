@@ -16,7 +16,7 @@ RSpec.describe EscalationPoliciesController, type: :controller do
   describe "GET #index" do
     it "returns a success response" do
       escalation_policy
-      get :index, params: {team_id: team.to_param}
+      get :index, params: {full_path: team.full_path, team_id: team.to_param}
       expect(response).to be_success
     end
   end
@@ -24,14 +24,14 @@ RSpec.describe EscalationPoliciesController, type: :controller do
   describe "GET #show" do
     it "returns a success response" do
       escalation_policy
-      get :show, params: {id: escalation_policy.to_param}
+      get :show, params: {full_path: team.full_path, id: escalation_policy.to_param}
       expect(response).to be_success
     end
   end
 
   describe "GET #new" do
     it "returns a success response" do
-      get :new, params: {team_id: team.to_param}
+      get :new, params: {full_path: team.full_path, team_id: team.to_param}
       expect(response).to be_success
     end
   end
@@ -39,7 +39,7 @@ RSpec.describe EscalationPoliciesController, type: :controller do
   describe "GET #edit" do
     it "returns a success response" do
       escalation_policy
-      get :edit, params: {id: escalation_policy.to_param}
+      get :edit, params: {full_path: team.full_path, id: escalation_policy.to_param}
       expect(response).to be_success
     end
   end
@@ -48,19 +48,19 @@ RSpec.describe EscalationPoliciesController, type: :controller do
     context "with valid params" do
       it "creates a new EscalationPolicy" do
         expect {
-          post :create, params: {team_id: team.to_param, escalation_policy: valid_attributes}
+          post :create, params: {full_path: team.full_path, team_id: team.to_param, escalation_policy: valid_attributes}
         }.to change(EscalationPolicy, :count).by(1)
       end
 
       it "redirects to the created escalation_policy" do
-        post :create, params: {team_id: team.to_param, escalation_policy: valid_attributes}
-        expect(response).to redirect_to(EscalationPolicy.last)
+        post :create, params: {full_path: team.full_path, team_id: team.to_param, escalation_policy: valid_attributes}
+        expect(response).to redirect_to([team, EscalationPolicy.last])
       end
     end
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'new' template)" do
-        post :create, params: {team_id: team.to_param, escalation_policy: invalid_attributes}
+        post :create, params: {full_path: team.full_path, team_id: team.to_param, escalation_policy: invalid_attributes}
         expect(response).to be_success
       end
     end
@@ -86,7 +86,7 @@ RSpec.describe EscalationPoliciesController, type: :controller do
 
       it "updates the requested escalation_policy" do
         escalation_policy
-        put :update, params: {id: escalation_policy.to_param, escalation_policy: new_attributes}
+        put :update, params: {full_path: team.full_path, id: escalation_policy.to_param, escalation_policy: new_attributes}
         escalation_policy.reload
         expect(escalation_policy.name).to eq 'new name'
         expect(escalation_policy.escalation_rules.size).to eq 1
@@ -99,15 +99,15 @@ RSpec.describe EscalationPoliciesController, type: :controller do
 
       it "redirects to the escalation_policy" do
         escalation_policy
-        put :update, params: {id: escalation_policy.to_param, escalation_policy: valid_attributes}
-        expect(response).to redirect_to(escalation_policy)
+        put :update, params: {full_path: team.full_path, id: escalation_policy.to_param, escalation_policy: valid_attributes}
+        expect(response).to redirect_to([team, escalation_policy])
       end
     end
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'edit' template)" do
         escalation_policy
-        put :update, params: {id: escalation_policy.to_param, escalation_policy: invalid_attributes}
+        put :update, params: {full_path: team.full_path, id: escalation_policy.to_param, escalation_policy: invalid_attributes}
         expect(response).to be_success
       end
     end
@@ -117,13 +117,13 @@ RSpec.describe EscalationPoliciesController, type: :controller do
     it "destroys the requested escalation_policy" do
       escalation_policy
       expect {
-        delete :destroy, params: {id: escalation_policy.to_param}
+        delete :destroy, params: {full_path: team.full_path, id: escalation_policy.to_param}
       }.to change(EscalationPolicy, :count).by(-1)
     end
 
     it "redirects to the escalation_policies list" do
       escalation_policy
-      delete :destroy, params: {id: escalation_policy.to_param}
+      delete :destroy, params: {full_path: team.full_path, id: escalation_policy.to_param}
       expect(response).to redirect_to([team, :escalation_policies])
     end
   end

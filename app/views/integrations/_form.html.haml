@@ -1,6 +1,6 @@
 -# frozen_string_literal: true
 
-- nested_route = @integration.new_record? ? [@service, @integration] : @integration.becomes(Integration)
+- nested_route = @integration.new_record? ? [@team, @service, @integration] : [@team, @integration.becomes(Integration)]
 = simple_form_for(nested_route) do |f|
   = f.error_notification
 
