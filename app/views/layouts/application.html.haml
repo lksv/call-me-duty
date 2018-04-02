@@ -51,9 +51,9 @@
               %a.nav-link.dropdown-toggle#navbarDropdown{href: '#', role:"button", data: {toggle: "dropdown"}, 'aria-haspopup' => 'true', 'aria-expanded' => 'false'}
                 Organizations
               .dropdown-menu{'aria-labelledby' => "navbarDropdown"}
-                %a.dropdown-item{href:"#"}Action
-                .dropdown-divider
-                %a.dropdown-item{href:"#"}Another action
+                - current_user.organizations.each do |organization|
+                  %a.dropdown-item{href:"#"}
+                    = organization.name
         %ul.navbar-nav.my-2.my-lg-0
           %li.nav-item.acitve
             - if user_signed_in?
@@ -62,7 +62,7 @@
               = link_to 'Sign in', new_user_session_path, class: 'nav-link'
 
 
-    .container
+    %main.container-fluid{role: 'main'}
       - flash.each do |name, msg|
         = content_tag :div, class: "alert alert-#{name == :error ? "danger" : "success" } alert-dismissable", role: "alert" do
           %button.close{type: "button", data: {dismiss: "alert"} }
