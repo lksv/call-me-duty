@@ -5,7 +5,7 @@ class IncidentsController < ApplicationController
   # GET /incidents
   # GET /incidents.json
   def index
-    @incidents = @team.incidents.all
+    @incidents = policy_scope(@team.incidents)
   end
 
   # GET /incidents/1

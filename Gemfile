@@ -16,6 +16,7 @@ gem 'haml-rails', '~> 1.0'
 gem 'httparty'
 gem 'webmock'
 gem 'webpacker', '~> 3.4'
+gem 'pundit'
 
 gem 'jquery-rails'
 gem 'bootstrap' , '~> 4.0.0'

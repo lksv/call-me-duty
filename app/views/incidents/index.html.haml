@@ -13,6 +13,7 @@
         %th Title
         %th Description
         %th Priority
+        %th Team
         %th
         %th
         %th
@@ -25,6 +26,7 @@
           %td= incident.title
           %td= incident.description
           %td= incident.priority
+          %td= incident.team_name
           %td= link_to 'Show', incident
           %td= link_to 'Edit', edit_incident_path(incident)
           %td= link_to 'Destroy', incident, data: { confirm: 'Are you sure?' }, method: :delete

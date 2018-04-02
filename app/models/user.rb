@@ -54,6 +54,19 @@ class User < ApplicationRecord
     organization_users.distinct
   end
 
+  # All teams whre the user is member of and all that teams descendants
+  # We need to return also all descendants teams
+  #
+  # Do not pass Organization to Team#visible_teams it would return all
+  # organization's teams
+  def visible_teams
+    teams.where(type: nil).visible_teams
+  end
+
+  def manageable_teams
+    owned_teams || master_groups
+  end
+
   private
 
   def set_default_organization

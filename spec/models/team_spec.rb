@@ -10,6 +10,9 @@ RSpec.describe Team, type: :model do
 
   let(:other_branch) { create(:team, slug: 'xxx', parent: organization) }
 
+  let(:organization11) { create(:organization, slug: 'o11') }
+  let(:team11) { create(:team, slug: 'team11', parent: organization11) }
+
   let(:team_delivery_gateway) { create(:webhook_gateway, team: team) }
   let(:subteam3_delivery_gateway) { create(:webhook_gateway, team: subteam3) }
 
@@ -161,6 +164,48 @@ RSpec.describe Team, type: :model do
         subteam2,
         subteam3
       )
+    end
+  end
+
+  describe '.visible_teams' do
+    it 'returns relation with self included' do
+      expect(Team.where(id: organization.id).visible_teams).to include(organization)
+      expect(Team.where(id: subteam3.id).visible_teams).to include(subteam3)
+      expect(Team.where(id: [organization.id, subteam3.id]).visible_teams)
+        .to include(subteam3, organization)
+    end
+
+    it 'is empty when given scope is none' do
+      expect(Team.none).to be_empty
+    end
+
+    it 'returns relation with only self when no children' do
+      expect(Team.where(id: organization).visible_teams.count).to eq 1
+      organization11 = FactoryBot.create(:organization)
+      expect(Team.where(id: [organization, organization11]).visible_teams.count).to eq 2
+    end
+
+    it 'returns relation with direct children included' do
+      team
+      other_branch
+      expect(Team.where(id: organization).visible_teams).to include(team, other_branch)
+    end
+
+    it 'returns children of several organizations' do
+      subteam3
+      other_branch
+      team11
+      expect(Team.where(id: [organization, organization11]).visible_teams)
+        .to include(
+          organization,
+          team,
+          subteam1,
+          subteam2,
+          subteam3,
+          other_branch,
+          organization11,
+          team11
+        )
     end
   end
 
