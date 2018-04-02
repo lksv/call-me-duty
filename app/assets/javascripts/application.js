@@ -10,14 +10,11 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require rails-ujs
-//= require turbolinks
-
 //= require jquery3
 //= require popper
+//= require rails-ujs
 //= require bootstrap-sprockets
-//x= xrequire bootstrap // > While bootstrap-sprockets provides individual Bootstrap components for ease of debugging, you may alternatively require the concatenated bootstrap for faster compilation
+//= require turbolinks
 //= require cocoon
 //= require vis
-
 //= require_tree .

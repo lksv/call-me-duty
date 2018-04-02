@@ -14,8 +14,6 @@
  *x= require_self
  */
 
-@import "bootstrap-generators";
+@import "bootstrap";
 @import "cocoon";
 @import "vis";
-// Custom bootstrap variables must be set or imported *before* bootstrap
-// @import "bootstrap";
