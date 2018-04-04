@@ -1,9 +1,10 @@
 -# frozen_string_literal: true
-= simple_form_for(@team) do |f|
+= simple_form_for(@team.becomes(Team)) do |f|
   = f.error_notification
 
   .form-inputs
     = f.input :name
+    = f.input :visibility_level, collection: Team::VisibilityLevels, include_blank: false
 
   .form-actions
     = f.button :submit

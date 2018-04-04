@@ -2,7 +2,7 @@
   = link_to teams_path, class: 'btn btn-default' do
     %span.glyphicon.glyphicon-list-alt
     Back
-  = link_to @team, class: 'btn btn-primary' do
+  = link_to @team.becomes(Team), class: 'btn btn-primary' do
     %span.glyphicon.glyphicon-info-sign
     Show
   %h1 Editing team

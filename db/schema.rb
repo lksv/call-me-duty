@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180331212117) do
+ActiveRecord::Schema.define(version: 20180403161849) do
 
   create_table "calendar_events", force: :cascade do |t|
     t.integer "calendar_id"
@@ -159,6 +159,7 @@ ActiveRecord::Schema.define(version: 20180331212117) do
     t.string "full_path", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "visibility_level", default: 0, null: false
     t.index ["full_path"], name: "index_teams_on_full_path", unique: true
     t.index ["owner_id"], name: "index_teams_on_owner_id"
     t.index ["parent_id", "name"], name: "index_teams_on_parent_id_and_name", unique: true

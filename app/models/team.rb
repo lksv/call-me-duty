@@ -2,16 +2,17 @@
 #
 # Table name: teams
 #
-#  id          :integer          not null, primary key
-#  name        :string           default(""), not null
-#  type        :string
-#  description :text
-#  parent_id   :integer
-#  owner_id    :integer
-#  slug        :string           default(""), not null
-#  full_path   :string           default(""), not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  id               :integer          not null, primary key
+#  name             :string           default(""), not null
+#  type             :string
+#  description      :text
+#  parent_id        :integer
+#  owner_id         :integer
+#  slug             :string           default(""), not null
+#  full_path        :string           default(""), not null
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  visibility_level :integer          default(0), not null
 #
 # Indexes
 #
@@ -24,6 +25,14 @@
 #
 
 class Team < ApplicationRecord
+  VisibilityLevels = {
+    private: 0,
+    internal: 10,
+    public: 20
+  }.freeze
+
+  VisibilityLevelsByValue = VisibilityLevels.invert.freeze
+
   before_destroy { |record| record.marked_for_destruction = true }
 
   # has_and_belongs_to_many :users
@@ -47,6 +56,10 @@ class Team < ApplicationRecord
   validates :full_path,           uniqueness: true
   validates :slug, presence: true, uniqueness: { scope: :parent }
   validates :name, presence: true, uniqueness: { scope: :parent }
+  validates :visibility_level,
+    presence: true,
+    allow_nil: false,
+    inclusion: { in: VisibilityLevels.values }
 
   after_create :set_calendar
 
@@ -56,6 +69,25 @@ class Team < ApplicationRecord
 
   # it must be set, before team.destroy
   attr_accessor :marked_for_destruction
+
+  def self.visible_teams
+    objects = self.distinct.pluck(:id, :full_path)
+    paths = objects.map(&:last)
+    ids = objects.map(&:first)
+
+    teams = Team.arel_table
+    arel_false_condition = Arel::Nodes::SqlLiteral.new('1').eq(0)
+    query = paths.reduce(arel_false_condition) do |memo, obj|
+      memo.or(teams[:full_path].matches("#{obj}/%"))
+    end
+    query = query.or(arel_table[:id].in(ids))
+
+    Team.unscoped.where(query)
+  end
+
+  def visibility_level_symbol
+    VisibilityLevelsByValue[visibility_level]
+  end
 
   # def oncall_at(at: DateTime.now)
   #   calendar&.oncall_at(at: at)

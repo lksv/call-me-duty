@@ -28,7 +28,7 @@ class TeamsController < ApplicationController
 
     respond_to do |format|
       if @team.save
-        format.html { redirect_to @team, notice: 'Team was successfully created.' }
+        format.html { redirect_to @team.becomes(Team), notice: 'Team was successfully created.' }
         format.json { render :show, status: :created, location: @team }
       else
         format.html { render :new }
@@ -42,7 +42,7 @@ class TeamsController < ApplicationController
   def update
     respond_to do |format|
       if @team.update(team_params)
-        format.html { redirect_to @team, notice: 'Team was successfully updated.' }
+        format.html { redirect_to @team.becomes(Team), notice: 'Team was successfully updated.' }
         format.json { render :show, status: :ok, location: @team }
       else
         format.html { render :edit }
@@ -77,6 +77,6 @@ class TeamsController < ApplicationController
     # TODO I cannot set any parent_id, but only of organization the
     # current_user is a member of
     def team_params
-      params.require(:team).permit(:name, :parent_id)
+      params.require(:team).permit(:name, :visibility_level, :parent_id)
     end
 end

@@ -26,7 +26,7 @@ class Member < ApplicationRecord
     SystemAdmin: 100
   }.freeze
 
-  AccessLevelsBySymbol = AccessLevels.invert.freeze
+  AccessLevelsByValue = AccessLevels.invert.freeze
 
   belongs_to :user
   belongs_to :team
@@ -36,7 +36,7 @@ class Member < ApplicationRecord
   validates :access_level, presence: true
   validates :user, uniqueness: { scope: :team }
   validate :user_in_organization
-  # validates :access_level, inclusion: { in: [0, 10,30,60,100] }
+  # validates :access_level, inclusion: { in: AccessLevels.values }
 
   before_destroy { throw :abort if user_not_used_in_teams }
   validate :user_not_used_in_teams, on: :destroy
@@ -46,7 +46,7 @@ class Member < ApplicationRecord
   delegate :name, to: :user, prefix: true
 
   def access_level_symbol
-    AccessLevelsBySymbol[access_level]
+    AccessLevelsByValue[access_level]
   end
 
   private

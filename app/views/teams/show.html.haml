@@ -7,6 +7,8 @@
     Edit
   %h1 Show team
 
-%dl.dl-horizontal
-  %dt Name:
-  %dd= @team.name
+%dl.row
+  %dt.col-sm-2 Name:
+  %dd.col-sm-10= @team.name
+  %dt.col-sm-2 Visibility Level:
+  %dd.col-sm-10= @team.visibility_level_symbol

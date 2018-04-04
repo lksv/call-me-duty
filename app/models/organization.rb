@@ -2,16 +2,17 @@
 #
 # Table name: teams
 #
-#  id          :integer          not null, primary key
-#  name        :string           default(""), not null
-#  type        :string
-#  description :text
-#  parent_id   :integer
-#  owner_id    :integer
-#  slug        :string           default(""), not null
-#  full_path   :string           default(""), not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  id               :integer          not null, primary key
+#  name             :string           default(""), not null
+#  type             :string
+#  description      :text
+#  parent_id        :integer
+#  owner_id         :integer
+#  slug             :string           default(""), not null
+#  full_path        :string           default(""), not null
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  visibility_level :integer          default(0), not null
 #
 # Indexes
 #

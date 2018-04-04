@@ -6,6 +6,8 @@ RSpec.describe TeamsController, type: :controller do
   let(:user)    { create(:user, teams: [team]) }
   let(:valid_attributes)    { attributes_for(:team, parent_id: team.id) }
   let(:invalid_attributes)  { {name:' '} }
+  let(:organization)        { team.organization }
+  let(:organization_valid_attributes)    { attributes_for(:organization) }
 
   before(:each) do
     sign_in user
@@ -89,6 +91,13 @@ RSpec.describe TeamsController, type: :controller do
         team
         put :update, params: {id: team.to_param, team: valid_attributes}
         expect(response).to redirect_to(team)
+      end
+
+      context "Organization" do
+        it "redirects to the team" do
+          put :update, params: {id: organization.to_param, team: organization_valid_attributes}
+          expect(response).to redirect_to(organization.becomes(Team))
+        end
       end
     end
 
