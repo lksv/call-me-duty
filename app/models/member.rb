@@ -20,10 +20,10 @@
 
 class Member < ApplicationRecord
   AccessLevels = {
-    Observer:   10,
-    Responder:  30,
-    Manager:    60,
-    SystemAdmin: 100
+    observer:   10,
+    responder:  30,
+    manager:    60,
+    system_admin: 100
   }.freeze
 
   AccessLevelsByValue = AccessLevels.invert.freeze

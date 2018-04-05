@@ -5,6 +5,7 @@ class IncidentsController < ApplicationController
   # GET /incidents
   # GET /incidents.json
   def index
+    authorize @team
     @incidents = policy_scope(@team.incidents)
   end
 
@@ -15,7 +16,8 @@ class IncidentsController < ApplicationController
 
   # GET /incidents/new
   def new
-    @incident = Incident.new
+    @incident = @team.incidents.build
+    authorize @incident
   end
 
   # GET /incidents/1/edit
@@ -26,6 +28,7 @@ class IncidentsController < ApplicationController
   # POST /incidents.json
   def create
     @incident = @team.incidents.new(incident_params)
+    authorize @incident
 
     respond_to do |format|
       if @incident.save
@@ -66,6 +69,7 @@ class IncidentsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_incident
       @incident = Incident.find(params[:id])
+      authorize @incident
       @team = @incident.team
     end
 
@@ -77,12 +81,7 @@ class IncidentsController < ApplicationController
     def incident_params
       #params.fetch(:incident, {})
       params.require(:incident).permit(
-        :status,
-        :title,
-        :description,
-        :team_id,
-        :service_id,
-        :priority
+        policy(@incident || Incident.new).permitted_attributes
       )
     end
 end
