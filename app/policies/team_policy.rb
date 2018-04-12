@@ -36,6 +36,6 @@ class TeamPolicy < ApplicationPolicy
   private
 
   def modifiable
-    user.team_access_level(record) >= Member::AccessLevels[:manager]
+    record.access_level_for_user(user) >= Member::MANAGER
   end
 end

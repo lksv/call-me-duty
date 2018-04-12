@@ -54,28 +54,13 @@ class User < ApplicationRecord
     organization_users.distinct
   end
 
-  # All teams whre the user is member of and all that teams descendants
+  # All teams where the user is member of and all that teams descendants
   # We need to return also all descendants teams
   #
   # Do not pass Organization to Team#visible_teams it would return all
   # organization's teams
   def visible_teams
     teams.where(type: nil).visible_teams
-  end
-
-  def team_access_level(team)
-    # TODO it's very uneffecient, speed up!
-    team_level = members.find_by(team: team)&.access_level
-    return team_level if team_level
-
-    parent = team.parent
-
-    return nil if parent.nil? || Organization === parent
-    return team_access_level(parent)
-  end
-
-  def manageable_teams
-    owned_teams || master_groups
   end
 
   private

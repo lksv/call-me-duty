@@ -19,14 +19,33 @@
 #
 
 class Member < ApplicationRecord
-  AccessLevels = {
-    observer:   10,
-    responder:  30,
-    manager:    60,
-    system_admin: 100
+
+  MEMBER       = 1
+  OBSERVER     = 10
+  RESPONDER    = 30
+  MANAGER      = 60
+  SYSTEM_ADMIN = 100
+
+  TeamAccessLevels = {
+    observer:     OBSERVER,
+    responder:    RESPONDER,
+    manager:      MANAGER,
+    system_admin: SYSTEM_ADMIN
   }.freeze
 
-  AccessLevelsByValue = AccessLevels.invert.freeze
+  TeamAccessLevelsByValue = TeamAccessLevels.invert.freeze
+
+  OrganizationAccessLevels = {
+    member:       MEMBER,
+    system_admin: SYSTEM_ADMIN
+  }
+
+  OrganizationAccessLevelsByValue = OrganizationAccessLevels.invert.freeze
+
+  AccessLevelsByValue = {}
+    .merge(TeamAccessLevelsByValue)
+    .merge(OrganizationAccessLevelsByValue)
+    .freeze
 
   belongs_to :user
   belongs_to :team
@@ -36,7 +55,8 @@ class Member < ApplicationRecord
   validates :access_level, presence: true
   validates :user, uniqueness: { scope: :team }
   validate :user_in_organization
-  # validates :access_level, inclusion: { in: AccessLevels.values }
+  # validates :access_level, inclusion: { in: TeamAccessLevels.values }
+  # validates :access_level, inclusion: { in: OrganizationAccessLevels.values }
 
   before_destroy { throw :abort if user_not_used_in_teams }
   validate :user_not_used_in_teams, on: :destroy

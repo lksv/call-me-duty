@@ -1,14 +1,18 @@
 class IncidentPolicy < TeamNestedPolicy
+
+  def modify_level
+    Member::RESPONDER
+  end
+
   def destroy?
-    # TODO
-    user.team_access_level(record.team) >= Member::AccessLevels[:system_admin]
+    record.team.access_level_for_user(user) >= Member::SYSTEM_ADMIN
   end
 
-  def permitted_attributes_for_create
-    permitted_attributes_for_edit + [ :team_id ]
-  end
+  # def permitted_attributes_for_create
+  #   permitted_attributes_for_edit + [ :team_id ]
+  # end
 
-  def permitted_attributes_for_edit
+  def permitted_attributes
     [
       :status,
       :title,

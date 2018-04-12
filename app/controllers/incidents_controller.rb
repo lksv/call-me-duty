@@ -5,7 +5,7 @@ class IncidentsController < ApplicationController
   # GET /incidents
   # GET /incidents.json
   def index
-    authorize @team
+    authorize @team.becomes(Team)
     @incidents = policy_scope(@team.incidents)
   end
 
@@ -45,7 +45,7 @@ class IncidentsController < ApplicationController
   # PATCH/PUT /incidents/1.json
   def update
     respond_to do |format|
-      if @incident.update(incident_params)
+      if @incident.update(permitted_attributes(@incident))
         format.html { redirect_to @incident, notice: 'Incident was successfully updated.' }
         format.json { render :show, status: :ok, location: @incident }
       else

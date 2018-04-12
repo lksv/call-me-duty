@@ -6,8 +6,14 @@ RSpec.describe User, type: :model do
   let(:team1) { create(:team, parent: create(:organization)) }
   let(:team2) { create(:team, parent: create(:organization)) }
 
+  let(:subteam1)    { create(:team, parent: team1) }
+  let(:subsubteam1) { create(:team, parent: subteam1) }
+
   let(:other_organization)  { create(:organization) }
   let(:other_team)           { create(:team, parent: other_organization) }
+
+  let(:team1_user) { create(:user, teams: [ team1 ]) }
+  let(:team2_user) { create(:user, teams: [ team1 ]) }
 
   describe 'FactoryBot.create(:user)' do
     it 'create user' do
@@ -27,9 +33,6 @@ RSpec.describe User, type: :model do
   end
 
   describe '#visible_users' do
-    let(:team1_user) { create(:user, teams: [ team1 ]) }
-    let(:team2_user) { create(:user, teams: [ team1 ]) }
-
     it 'returns users in same teams' do
       team1_user
       team2_user
@@ -45,6 +48,38 @@ RSpec.describe User, type: :model do
       other_organization
       expect(subject.visible_users).not_to include(other_organization)
       expect(subject.visible_users).not_to include(other_team)
+    end
+  end
+
+  describe '#visible_teams' do
+    context 'when user is member of Team1' do
+      it 'returned teams include the `team1`' do
+        expect(team1_user.visible_teams).to include(subteam1)
+      end
+
+      it 'returns a subteam of the `team1`' do
+        subteam1
+        expect(team1_user.visible_teams).to include(subteam1)
+      end
+
+      it 'returns subteam of subteam' do
+        subsubteam1
+        expect(team1_user.visible_teams).to include(subsubteam1)
+      end
+    end
+
+    context 'when user is member of organization but not a member of team' do
+      it 'do not returns team' do
+        team2
+        expect(team1_user.visible_teams).to_not include(team2)
+      end
+    end
+
+    context 'when user is not member of organization' do
+      it 'do not return team' do
+        other_team
+        expect(team1_user.visible_teams).to_not include(other_team)
+      end
     end
   end
 

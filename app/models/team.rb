@@ -25,10 +25,14 @@
 #
 
 class Team < ApplicationRecord
+  PRIVATE   = 0
+  INTERNAL  = 10
+  PUBLIC    = 20
+
   VisibilityLevels = {
-    private: 0,
-    internal: 10,
-    public: 20
+    private:  PRIVATE,
+    internal: INTERNAL,
+    public:   PUBLIC
   }.freeze
 
   VisibilityLevelsByValue = VisibilityLevels.invert.freeze
@@ -85,6 +89,8 @@ class Team < ApplicationRecord
     Team.unscoped.where(query)
   end
 
+  ###
+
   def visibility_level_symbol
     VisibilityLevelsByValue[visibility_level]
   end
@@ -97,6 +103,32 @@ class Team < ApplicationRecord
   #
   def organization?
     parent_id.nil?
+  end
+
+  def public?
+    visibility_level == PUBLIC
+  end
+
+  def internal?
+    visibility_level == INTERNAL
+  end
+
+  def private?
+    visibility_level == PRIVATE
+  end
+
+  def visible_for_user?(user)
+    !!(public? ||
+        (user && internal? && organization.users.include?(user)) ||
+        user&.visible_teams&.include?(self)
+      )
+  end
+
+  def access_level_for_user(user)
+    level = members.find_by(user: user)&.access_level
+    return level if level
+
+    parent.access_level_for_user(user)
   end
 
   def slugs
@@ -112,7 +144,7 @@ class Team < ApplicationRecord
 
   def ancestor_paths
     slugs
-      .map.with_index { |obj,idx| slugs[0,idx+1] }
+      .map.with_index { |obj,idx| slugs[0, idx + 1] }
       .map { |t| t.join('/') }
   end
 

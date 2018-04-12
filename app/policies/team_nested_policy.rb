@@ -1,17 +1,16 @@
 class TeamNestedPolicy < ApplicationPolicy
 
   def modify_level
-    :manager
+    Member::MANAGER
   end
 
   def index?
-    # for #index? we suppose to obtain a Team instance in record attribute
-    record && user.visible_teams.to_a.include?(record)
+    # we suppose to obtain a Team instance in record attribute
+    record&.visible_for_user?(user)
   end
 
   def show?
-    #(team.visibility_level > TODO) ||
-      record.team && user.visible_teams.to_a.include?(record.team)
+    record&.team&.visible_for_user?(user)
   end
 
   def create?
@@ -35,6 +34,6 @@ class TeamNestedPolicy < ApplicationPolicy
   private
 
   def modifiable
-    user.team_access_level(record.team) >= Member::AccessLevels[modify_level]
+    record.team.access_level_for_user(user) >= modify_level
   end
 end

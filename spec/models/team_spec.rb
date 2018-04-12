@@ -209,6 +209,99 @@ RSpec.describe Team, type: :model do
     end
   end
 
+  describe '#visible_for_user?' do
+
+    let(:organization1) { create(:organization) }
+    let(:organization2) { create(:organization) }
+
+    let(:public_team) do
+      _default_organization = organization1
+      create(:team, visibility_level: Team::PUBLIC, parent: organization2)
+    end
+    let(:internal_team) do
+      _default_organization = organization1
+      create(:team, visibility_level: Team::INTERNAL, parent: organization2)
+    end
+    let(:private_team) do
+      _default_organization = organization1
+      create(:team, visibility_level: Team::PRIVATE, parent: organization2)
+    end
+    let(:private_subteam) do
+      _default_organization = organization1
+      create(:team, visibility_level: Team::PRIVATE, parent: private_team)
+    end
+
+    let(:team_of_organization1) { create(:team, parent: organization1) }
+    let(:team_of_organization2) { create(:team, parent: organization2) }
+
+    let(:foreign_user) do
+      _default_organization = organization1
+      create(:user, teams: [ team_of_organization1 ])
+    end
+
+    let(:user_of_same_organization) do
+      _default_organization = organization1
+      create(:user, teams: [ team_of_organization2 ])
+    end
+    let(:user_of_public_team) do
+      _default_organization = organization1
+      create(:user, teams: [ public_team ])
+    end
+    let(:user_of_internal_team) do
+      _default_organization = organization1
+      create(:user, teams: [ internal_team ])
+    end
+    let(:user_of_private_team) do
+      _default_organization = organization1
+      create(:user, teams: [ private_team ])
+    end
+
+    context 'when team access_level is public' do
+      it 'returns true' do
+        expect(public_team.visible_for_user?(foreign_user)).to be true
+        expect(public_team.visible_for_user?(user_of_same_organization)).to be true
+        expect(public_team.visible_for_user?(user_of_public_team)).to be true
+      end
+
+      it 'returns true when user is nil' do
+        expect(public_team.visible_for_user?(nil)).to be true
+      end
+    end
+
+    context 'when team access_level is internal' do
+      it 'returns false when user is nil' do
+        expect(internal_team.visible_for_user?(nil)).to be false
+      end
+
+      it 'returns true when user is part of organization' do
+        expect(internal_team.visible_for_user?(user_of_same_organization)).to be true
+        expect(internal_team.visible_for_user?(user_of_internal_team)).to be true
+      end
+
+      it 'returns false when the user is not part of organization' do
+        expect(internal_team.visible_for_user?(foreign_user)).to be false
+      end
+    end
+
+    context 'when team access_level is private' do
+      it 'returns false when user is nil' do
+        expect(private_team.visible_for_user?(nil)).to be false
+      end
+
+      it 'returns false when user is part of organization but not team member' do
+        expect(private_team.visible_for_user?(user_of_same_organization)).to be false
+      end
+
+      it 'returns false when the user is not part of organization' do
+        expect(private_team.visible_for_user?(foreign_user)).to be false
+      end
+
+      it 'returns true when the user is member any of ancestors teams' do
+        expect(private_subteam.visible_for_user?(user_of_private_team)).to be true
+      end
+    end
+  end
+
   describe '#visible_delivery_gateways' do
     it 'returns delivery_gateways of parent' do
       team_delivery_gateway

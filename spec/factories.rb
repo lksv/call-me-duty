@@ -73,7 +73,11 @@ FactoryBot.define do
     sequence(:name)  { |n| "fake#{n} name" }
     password        'myPassword'
     organizations    do |user|
-      [ Organization.first || FactoryBot.create(:organization) ]
+      org_name = 'default Org'
+      [
+        Organization.find_by(name: org_name) ||
+          FactoryBot.create(:organization, name: org_name)
+      ]
     end
     transient do
       teams []
@@ -83,7 +87,7 @@ FactoryBot.define do
       evaluator.teams.each do |t|
         o = t.organization
         o.users << user unless o.users.include?(user)
-        user.teams << t
+        user.members.create(team: t, access_level: 100)
       end
     end
   end
