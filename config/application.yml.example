@@ -1,10 +1,21 @@
 productin: &base
-  cmp:
-    email_from: example@example.com
-    email_display_name: call-me-duty
-    email_reply_to: noreply@example.com
-    email_subject_suffix: ''
-    webhook_timeout: 4
+  email:
+    from: example@example.com
+    display_name: call-me-duty
+    reply_to: noreply@example.com
+    subject_suffix: ''
+
+  webhook_timeout: 4
+
+  nexmo:
+    api_key: abcdef01
+    secret: 0123456789abcdef
+  messagebird:
+    access_key: FILLaSECRET01234567890123
+    call_timeout: 10
+    source: "420123456780"
+
+
 
 development:
   <<: *base

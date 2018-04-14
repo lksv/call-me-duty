@@ -94,12 +94,17 @@ FactoryBot.define do
 
   factory :organization do
     sequence(:name) { |n| "MyGigaCorp no. #{n}" }
+    visibility_level   Team::PRIVATE
     type    'Organization'
   end
 
   factory :team do
     sequence(:name) { |n| "Team name no. #{n}" }
-    parent      { |o| o.parent = Organization.first || FactoryBot.create(:organization) }
+    visibility_level Team::PRIVATE
+    parent do |o|
+      o.parent = Organization.first ||
+        FactoryBot.create(:organization)
+    end
   end
 
   factory :member do

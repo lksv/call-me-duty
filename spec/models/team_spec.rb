@@ -16,6 +16,8 @@ RSpec.describe Team, type: :model do
   let(:team_delivery_gateway) { create(:webhook_gateway, team: team) }
   let(:subteam3_delivery_gateway) { create(:webhook_gateway, team: subteam3) }
 
+  let(:user) { create(:user) }
+
   describe 'strip_attributes' do
     it 'strip spaces and new lines from name attribute' do
       t1 = Team.new(name: "  My  Name  \n ")
@@ -89,6 +91,81 @@ RSpec.describe Team, type: :model do
     end
   end
 
+  describe '.visible_teams' do
+    it 'returns relation with self included' do
+      expect(Team.where(id: organization.id).visible_teams).to include(organization)
+      expect(Team.where(id: subteam3.id).visible_teams).to include(subteam3)
+      expect(Team.where(id: [organization.id, subteam3.id]).visible_teams)
+        .to include(subteam3, organization)
+    end
+
+    it 'is empty when given scope is none' do
+      expect(Team.none).to be_empty
+    end
+
+    it 'returns relation with only self when no children' do
+      expect(Team.where(id: organization).visible_teams.count).to eq 1
+      organization11 = FactoryBot.create(:organization)
+      expect(Team.where(id: [organization, organization11]).visible_teams.count).to eq 2
+    end
+
+    it 'returns relation with direct children included' do
+      team
+      other_branch
+      expect(Team.where(id: organization).visible_teams).to include(team, other_branch)
+    end
+
+    it 'returns children of several organizations' do
+      subteam3
+      other_branch
+      team11
+      expect(Team.where(id: [organization, organization11]).visible_teams)
+        .to include(
+          organization,
+          team,
+          subteam1,
+          subteam2,
+          subteam3,
+          other_branch,
+          organization11,
+          team11
+        )
+    end
+  end
+
+  describe '#access_level_for_user' do
+    context 'when user is not in organization' do
+      it 'returns 0' do
+        organization
+        expect(team11.access_level_for_user(user)).to eq 0
+      end
+    end
+
+    context 'when user is in organization but not in team and ancestors' do
+      it 'returns access_level of organization' do
+        organization
+        organization11.members.create!(user: user, access_level: Member::MEMBER)
+        expect(team11.access_level_for_user(user)).to eq Member::MEMBER
+      end
+    end
+
+    context 'when user is part of team' do
+      it 'returns as access_level of team member' do
+        organization
+        team11.members.create!(user: user, access_level: Member::RESPONDER)
+        expect(team11.access_level_for_user(user)).to eq Member::RESPONDER
+      end
+    end
+
+    context 'when user is part of parent team' do
+      it 'returns an access_level of parent team' do
+        organization11
+        team.members.create!(user: user, access_level: Member::RESPONDER)
+        expect(subteam3.access_level_for_user(user)).to eq Member::RESPONDER
+      end
+    end
+  end
+
   describe '#slugs' do
     it 'returns array of slug item on Organization' do
       expect(organization.slugs).to eq [organization.slug]
@@ -148,7 +225,7 @@ RSpec.describe Team, type: :model do
     end
   end
 
-  describe 'descendants' do
+  describe '#descendants' do
     it 'returns empty relation when no descendants' do
       expect(subteam3.descendants).to eq []
     end
@@ -164,48 +241,6 @@ RSpec.describe Team, type: :model do
         subteam2,
         subteam3
       )
-    end
-  end
-
-  describe '.visible_teams' do
-    it 'returns relation with self included' do
-      expect(Team.where(id: organization.id).visible_teams).to include(organization)
-      expect(Team.where(id: subteam3.id).visible_teams).to include(subteam3)
-      expect(Team.where(id: [organization.id, subteam3.id]).visible_teams)
-        .to include(subteam3, organization)
-    end
-
-    it 'is empty when given scope is none' do
-      expect(Team.none).to be_empty
-    end
-
-    it 'returns relation with only self when no children' do
-      expect(Team.where(id: organization).visible_teams.count).to eq 1
-      organization11 = FactoryBot.create(:organization)
-      expect(Team.where(id: [organization, organization11]).visible_teams.count).to eq 2
-    end
-
-    it 'returns relation with direct children included' do
-      team
-      other_branch
-      expect(Team.where(id: organization).visible_teams).to include(team, other_branch)
-    end
-
-    it 'returns children of several organizations' do
-      subteam3
-      other_branch
-      team11
-      expect(Team.where(id: [organization, organization11]).visible_teams)
-        .to include(
-          organization,
-          team,
-          subteam1,
-          subteam2,
-          subteam3,
-          other_branch,
-          organization11,
-          team11
-        )
     end
   end
 
@@ -317,6 +352,80 @@ RSpec.describe Team, type: :model do
     it 'not return delivery_gateway of subteams' do
       subteam3_delivery_gateway
       expect(subteam2.visible_delivery_gateways).not_to include(subteam3_delivery_gateway)
+    end
+  end
+
+  describe '#visibility_level_allowed_by_sub_teams' do
+    let!(:internal_team) { create(:team, visibility_level: Team::INTERNAL) }
+    let!(:internal_subteam) { create(:team, parent: internal_team, visibility_level: Team::INTERNAL) }
+    let(:organization) { internal_team.organization }
+
+    context 'when parent team has same visibility_level' do
+      it 'is valid' do
+        expect(internal_team).to be_valid
+      end
+    end
+
+    context 'when parent team has more restrictive visibility_level' do
+      it 'is valid' do
+        internal_subteam.visibility_level = Team::PUBLIC
+        expect(internal_team).to be_valid
+      end
+    end
+
+    context 'when parent team has less restrictive visibility_level' do
+      it 'is invalid' do
+        internal_team.visibility_level = Team::PRIVATE
+        expect(internal_team).to be_invalid
+        expect(internal_team.errors[:visibility_level])
+          .to include('cannot be more restrictive than visibility_level in any of sub-teams')
+      end
+    end
+
+    context 'when team is an Organization' do
+      it 'is valid' do
+        organization.visibility_level = Team::PUBLIC
+        expect(organization).to be_valid
+        organization.visibility_level = Team::PRIVATE
+        expect(organization).to be_valid
+      end
+    end
+  end
+
+  describe '#visibility_level_allowed_by_parent' do
+    let!(:internal_team) { create(:team, visibility_level: Team::INTERNAL) }
+    let!(:internal_subteam) { create(:team, parent: internal_team, visibility_level: Team::INTERNAL) }
+
+    context 'when sub team has same visibility_level' do
+      it 'is valid' do
+        expect(internal_subteam).to be_valid
+      end
+    end
+
+    context 'when sub team has less restrictive visibility_level' do
+      it 'is valid' do
+        internal_subteam.visibility_level = Team::PUBLIC
+        expect(internal_subteam).to be_valid
+      end
+    end
+
+    context 'when sub team has higher priority' do
+      it 'is invalid' do
+        internal_subteam.visibility_level = Team::PRIVATE
+        expect(internal_subteam).to be_invalid
+      end
+    end
+
+    context 'when parent is Organization' do
+      let!(:team) { create(:team, visibility_level: Team::INTERNAL) }
+      let!(:organization) { internal_team.organization }
+
+      it 'is valid' do
+        organization.visibility_level = Team::PRIVATE
+        expect(team).to be_valid
+        organization.visibility_level = Team::PUBLIC
+        expect(team).to be_valid
+      end
     end
   end
 end

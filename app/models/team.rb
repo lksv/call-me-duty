@@ -64,6 +64,9 @@ class Team < ApplicationRecord
     presence: true,
     allow_nil: false,
     inclusion: { in: VisibilityLevels.values }
+  validate :visibility_level_allowed_by_parent
+  validate :visibility_level_allowed_by_sub_teams
+
 
   after_create :set_calendar
 
@@ -117,16 +120,11 @@ class Team < ApplicationRecord
     visibility_level == PRIVATE
   end
 
-  def visible_for_user?(user)
-    !!(public? ||
-        (user && internal? && organization.users.include?(user)) ||
-        user&.visible_teams&.include?(self)
-      )
-  end
-
   def access_level_for_user(user)
     level = members.find_by(user: user)&.access_level
     return level if level
+
+    return 0 unless parent
 
     parent.access_level_for_user(user)
   end
@@ -157,6 +155,13 @@ class Team < ApplicationRecord
     Team.where(teams[:full_path].matches("#{full_path}/%"))
   end
 
+  def visible_for_user?(user)
+    !!(public? ||
+        (user && internal? && organization.users.include?(user)) ||
+        user&.visible_teams&.include?(self)
+      )
+  end
+
   def visible_delivery_gateways
     DeliveryGateway.where(team_id: ancestors)
   end
@@ -179,5 +184,17 @@ class Team < ApplicationRecord
 
   def set_calendar
     self.create_calendar!
+  end
+
+  def visibility_level_allowed_by_sub_teams
+    return if Organization === self
+    return if !children.where('visibility_level > ?', visibility_level).exists?
+    errors.add(:visibility_level, 'cannot be more restrictive than visibility_level in any of sub-teams')
+  end
+
+  def visibility_level_allowed_by_parent
+    return if parent.nil? or Organization === parent
+    return if visibility_level >= parent.visibility_level
+    errors.add(:visibility_level, 'cannot be less restrictive than visibility_level of parent team')
   end
 end
